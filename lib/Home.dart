@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/AppThemes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -11,7 +12,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Screen"),
+        title: Text(DotEnv().env['VAR_NAME'])//"Home Screen"),
       ),
       body: Center(
         child: Column(
