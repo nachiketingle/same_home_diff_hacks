@@ -23,9 +23,10 @@ class _SettingsPageState extends State<SettingsPage> {
     User user = User(
       true,
       _nameController.text.trim(),
-      "A7G8F"
+      "A7G8F",
+      _groupNameController.text.trim()
     );
-    //Navigator.pushNamed(context, "/createGroup");
+    Navigator.pushNamed(context, "/createGroup", arguments: user);
 
     // TODO: If not, indicate it with snack bar
     _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -97,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
         onPressed: getAccessCode,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
 
   }

@@ -4,7 +4,8 @@ class User {
   String name;
   String accessCode;
   String uuid;
+  String groupName = "";
 
-  User(bool isHost, String name, String accessCode);
+  User(this.isHost, this.name, this.accessCode, this.groupName);
 
 }
