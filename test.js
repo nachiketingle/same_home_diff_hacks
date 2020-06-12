@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+var crypto = require('crypto');
+
 
 const app = express();
 const port = 5000;
@@ -9,10 +11,13 @@ const port = 5000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/create-group', (req, res) => {
+app.put('/create-group', (req, res) => {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-  res.send(ip);
+  ip = ip + (Math.random() * 1000).toString(10);
+  var name = req.body['name']
+  console.log(name)
+  var hash = crypto.createHash('md5').update(ip).digest('hex');
+  res.send(hash.substring(0, 6) + " " + name);
 });
 
 app.set('trust proxy', true)
