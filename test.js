@@ -17,8 +17,10 @@ app.put('/create-group', (req, res) => {
   var name = req.body['name']
   console.log(name)
   var hash = crypto.createHash('md5').update(ip).digest('hex');
-  res.send(hash.substring(0, 6) + " " + name);
+  res.send(hash.substring(0, 6));
 });
+
+
 
 app.set('trust proxy', true)
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`))
