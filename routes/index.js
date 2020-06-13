@@ -35,12 +35,12 @@ router.get("/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81", (req,res) => {
 })
 
 router.get("/kevin", (req,res) => {
-  res.send("<p style=\"font-size:500px;\">🤡</p>");
+  res.send("<p style=\"text-align:center;width:100%;font-size:75vh;\">🤡</p>");
 })
 
 router.get("/kasper", (req,res) => {
   let r = "";
-  for(let i = 0; i < 1000; i++) {
+  for(let i = 0; i < 1229; i++) {
     r += "👻"
   }
   res.send(r);
