@@ -34,6 +34,13 @@ router.get('/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81', (req, res) => {
   res.send(r);
 })
 
+router.get('/happy-birthday-tzuyu', (req, res) => {
+  res.send('<img src=\"https://kpopping.com/uploads/documents/Tzuyu1419.jpeg\" height = \"500\"> <img src=\"https://www.knetizen.com/wp-content/uploads/2019/05/TWICE-Tzuyu.jpg\" height = \"500\">' +
+  '<img src=\"https://i.redd.it/nuekhv9mt6j31.jpg\" height = \"500\"> <img src=\"https://pm1.narvii.com/6348/6640f21db5291e524af46988cbff7252807a5e3c_hq.jpg\" height = \"500\">' +
+'<img src=\"https://papers.co/wallpaper/papers.co-hq84-kpop-twice-tzuyu-girl-night-camping-40-wallpaper.jpg\" height = \"500\"> <img src=\"https://3.bp.blogspot.com/-FeWL5jRoOmU/XEJfqbhXePI/AAAAAAAAC9s/7hw_kqXeeQsiItY7dNTMaeihSB0ilmZfQCEwYBhgL/s1600/Tzuyu%2B%2528Twice%2529%2B-%2BChou%2BTzu-Yu%2BLatest%2Bphotos%2B-%2Bwww.profileaz.com%2B%252812%2529.jpg\" height = \"500\">' +
+'<img src=\"https://i.redd.it/7pn8bn1dss911.jpg\" height = \"500\"> <img src=\"https://kpopping.com/uploads/documents/TenderHeart0614-1188135559274713088-EH0a83SUwAArxj1.jpeg\" height = \"500\">' +
+'<img src=\"https://i.pinimg.com/originals/15/6a/0f/156a0f0c74564286a259eb30ef56d286.jpg\" height = \"500\"> <img src=\"https://pbs.twimg.com/media/DitiWC7U0AAtUkv.jpg\" height = \"500\">')
+})
 
 router.get("/kevin", (req,res) => {
   res.send("<script>function secret() {document.getElementById(\"audio\").play();}</script><audio id=\"audio\" src=\"secret.mp3\"></audio><p style=\"text-align:center;width:100%;font-size:75vh;\" onclick=\"secret()\">🤡</p>");
@@ -145,7 +152,7 @@ router.put('/join-group', async (req, res) => {
   if (doc) {
     // if name is valid
     if (!doc['members'].includes(name)) {
-      // add members 
+      // add members
       doc['members'].push(name);
       //  update document
       mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
