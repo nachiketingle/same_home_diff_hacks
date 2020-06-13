@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import '../Models/User.dart';
 import 'package:samehomediffhacks/Helpers/AppThemes.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:async';
 
 class GuestLobby extends StatefulWidget {
   _GuestLobbyState createState() => _GuestLobbyState();
@@ -9,41 +8,63 @@ class GuestLobby extends StatefulWidget {
 
 class _GuestLobbyState extends State<GuestLobby> {
 
-  Completer<GoogleMapController> _controller = Completer();
+  User user;
+  List<String> _allUsers = List<String>();
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  void startVote() {
+    if(!isValid()) {
+      return;
+    }
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+    // Tell server to start vote
+    Navigator.of(context).pushNamed("/categories", arguments: user);
+  }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  bool isValid() {
+    // Determine if there is just more than one person in the group
+    return _allUsers.length > 1;
+  }
+
+  void getNames() {
+    // Ping server to get list of names
+    _allUsers.clear();
+    _allUsers.add(user.name);
+    _allUsers.add("Kev");
+    _allUsers.add("arOn");
+    _allUsers.add("Casp");
+  }
+
+  void initState() {
+    super.initState();
   }
 
   Widget build(BuildContext context) {
+
+    user = ModalRoute.of(context).settings.arguments;
+    print(user.toString());
+    getNames();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Guest Lobby Page"),
+        title: Text("Group: " + user.groupName),
       ),
-
-      body:GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text("Acces Code: " + user.accessCode.toString()),
+            ListView.builder(
+                itemCount: _allUsers.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(_allUsers[index]),
+                  );
+                }
+            ),
+            Text("Number of Users: " + _allUsers.length.toString())
+          ],
+        ),
       ),
     );
   }

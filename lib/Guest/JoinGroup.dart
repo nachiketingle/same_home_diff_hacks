@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Helpers/AppThemes.dart';
+import 'package:samehomediffhacks/Models/User.dart';
 import 'package:samehomediffhacks/Services/GroupServices.dart';
 
 class JoinGroup extends StatefulWidget {
@@ -30,7 +31,8 @@ class _JoinGroupState extends State<JoinGroup> {
         ));
       }
       else {
-        Navigator.pushNamed(context, "/guestLobby");
+        User user = User(false, name, code, value['groupName']);
+        Navigator.pushNamed(context, "/guestLobby", arguments: user);
       }
     });
 
