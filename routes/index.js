@@ -11,6 +11,37 @@ console.log(url);
 const client = new MongoClient(url);
 const dbName = 'tzuyu';
 
+router.put('/get-restuarants', (req, res) => {
+  var list = [{"name": "In-N-Out",
+              "id": "WavvLdfdP6g8aZTtbBQHTw",
+              "rating": 4.5,
+              "review_count": 5296,
+              "price":"$",
+              "latitude":37.7670169511878, "longitude": -122.42184275, "photos": [
+              "https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg",
+              "https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg",
+              "https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg"]},
+              {"name": "mcdonalds",
+              "id": "WavvLdfdP6g8aZTtbBQHTw",
+              "rating": 1.2,
+              "review_count": 5453356,
+              "price":"$",
+              "latitude":31.7670169511878, "longitude": -121.42184275, "photos": [
+              "https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg",
+              "https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg",
+              "https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg"]},
+              {"name": "icecream",
+              "id": "WavvLdfdP6g8aZTtbBQHTw",
+              "rating": 5.3,
+              "review_count": 556,
+              "price":"$",
+              "latitude":31.7670169511878, "longitude": -121.42184275, "photos": [
+              "https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg",
+              "https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg",
+              "https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg"]}
+              ];
+  res.json(list);
+})
 
 router.put('/create-group', (req, res) => {
   // Generate an access code
