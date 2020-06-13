@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'Models/Review.dart';
 import 'package:samehomediffhacks/Models/Restaurant.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RestaurantInfoPage extends StatefulWidget {
   _RestaurantInfoPageState createState() => _RestaurantInfoPageState();
@@ -9,6 +12,8 @@ class RestaurantInfoPage extends StatefulWidget {
 class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
 
   Restaurant _restaurant;
+  CameraPosition camPos;
+  Completer<GoogleMapController> _controller = Completer();
 
   /// Returns the list view for the images based on the URL in the restaurant
   Widget _imagesListView() {
@@ -73,6 +78,10 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
   Widget build(BuildContext context) {
 
     _restaurant = ModalRoute.of(context).settings.arguments;
+    camPos = CameraPosition(
+      target: LatLng(_restaurant.lat, _restaurant.lng),
+      zoom: 20
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -84,6 +93,15 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _imagesListView(),
+            Expanded(
+              child: GoogleMap(
+                mapType: MapType.hybrid,
+                initialCameraPosition: camPos,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+              ),
+            ),
             Text("Rating: " + _restaurant.rating.toString() + "     Price Range: " + _restaurant.priceRange.toString()),
             _reviewsListView(),
           ],
