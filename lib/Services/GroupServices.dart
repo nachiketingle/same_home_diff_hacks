@@ -10,9 +10,9 @@ class GroupServices {
     json['longitude'] = lng.toString();
     json['maxDistance'] = maxDistance.toString();
     print("Creating a group");
-    List<dynamic> list = await Network.put("create-group", json);
-    print("Create group response: " + list[0]);
-    return list[0];
+    Map<String, dynamic> list = await Network.put("create-group", json);
+    print("Create group response: " + list['accessCode']);
+    return list['accessCode'];
   }
 
   static Future<bool> joinGroup(String accessCode) async {

@@ -5,7 +5,7 @@ import 'dart:convert';
 class Network {
   static final String baseURL = DotEnv().env['SERVER_URL'];
 
-  static Future<List<dynamic>> get(String type, Map<String, String> queries) async {
+  static Future<dynamic> get(String type, Map<String, String> queries) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";
@@ -16,7 +16,7 @@ class Network {
     return jsonDecode(response.body);
   }
 
-  static Future<List<dynamic>> put(String type, Map<String, dynamic> body) async {
+  static Future<dynamic> put(String type, Map<String, dynamic> body) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";
@@ -29,7 +29,7 @@ class Network {
     return jsonDecode(response.body);
   }
 
-  static Future<List<dynamic>> post(String type, Map<String, String> body) async {
+  static Future<dynamic> post(String type, Map<String, String> body) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";
@@ -40,7 +40,7 @@ class Network {
     return jsonDecode(response.body);
   }
 
-  static Future<List<dynamic>> delete(String type, Map<String, String> queries) async {
+  static Future<dynamic> delete(String type, Map<String, String> queries) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";

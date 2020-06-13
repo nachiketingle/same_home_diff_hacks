@@ -9,9 +9,11 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
 
   Restaurant _restaurant;
 
+  /// Returns the list view for the images based on the URL in the restaurant
   Widget _imagesListView() {
     List<String> imageURL = _restaurant.imageURLs;
 
+    // If we don't have any images, these are the default
     if (imageURL == null) {
       imageURL = List<String>();
       imageURL.add('https://picsum.photos/250?image=9');
@@ -22,7 +24,7 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
         scrollDirection: Axis.horizontal,
         physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            return Image.network(imageURL[index], width: 60, height: 60,);
+            return Image.network(imageURL[index], width: 200, height: 200,);
           },
           separatorBuilder: (context, index) => Divider(),
           itemCount: imageURL.length
