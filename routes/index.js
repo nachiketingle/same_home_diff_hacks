@@ -130,7 +130,7 @@ router.put('/create-group', async (req, res) => {
     group['accessCode'] = accessCode;
   }
   // respond with the access code
-  res.send(accessCode);
+  res.json({accessCode:accessCode});
 });
 
 // Join a group
