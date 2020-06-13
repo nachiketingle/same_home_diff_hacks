@@ -12,29 +12,44 @@ class _JoinGroupState extends State<JoinGroup> {
   TextEditingController _nameController = TextEditingController();
   bool _pinging = false;
 
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   void submitCode() async {
-    if(!_isValid() || _pinging) {
+    if(_pinging) {
       return;
     }
     _pinging = true;
     String code = _accessCodeController.text;
     String name = _nameController.text.trim();
-    _pinging = false;
-    Navigator.pushNamed(context, "/guestLobby");
-    //GroupServices.joinGroup(code).then((value) {
+    
+    GroupServices.joinGroup(code, name).then((value) {
+      _pinging = false;
+      if(value.containsKey('error')) {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(value['error']),
+        ));
+      }
+      else {
+        Navigator.pushNamed(context, "/guestLobby");
+      }
+    });
 
-    //});
-
-  }
-
-  bool _isValid() {
-    return true;
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Join Group Page"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.http),
+            onPressed: () {
+              _accessCodeController.text = "c65a";
+              submitCode();
+            },
+          )
+        ],
       ),
 
       body: Center(

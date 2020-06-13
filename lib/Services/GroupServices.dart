@@ -15,12 +15,12 @@ class GroupServices {
     return list['accessCode'];
   }
 
-  static Future<bool> joinGroup(String accessCode) async {
+  static Future<Map<String, dynamic>> joinGroup(String accessCode, String name) async {
     Map<String, dynamic> json = Map();
     json['accessCode'] = accessCode;
-    List<dynamic> list = await Network.put('join-group', json);
-    print("Join Success: " + list[0]);
-    return list[0];
+    json['name'] = name;
+    Map<String, dynamic> list = await Network.put('join-group', json);
+    return list;
   }
 
 }

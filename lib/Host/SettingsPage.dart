@@ -74,12 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text("Settings Page"),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.http),
-            onPressed: () {
-              GroupServices.joinGroup("c65a");
-            },
-          )
+
         ],
       ),
 
