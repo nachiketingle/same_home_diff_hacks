@@ -34,6 +34,18 @@ router.get("/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81", (req,res) => {
   res.send(r);
 })
 
+router.get("/kevin", (req,res) => {
+  res.send("<p style="font-size:500px;">🤡</p>");
+})
+
+router.get("/kasper", (req,res) => {
+  let r = "";
+  for(let i = 0; i < 1000; i++) {
+    r += "👻"
+  }
+  res.send(r);
+})
+
 router.get('/mongo', (req, res) => {
   mongo.viewDB('group', (docs) => res.json(docs))
 })
