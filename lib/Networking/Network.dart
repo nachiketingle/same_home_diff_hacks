@@ -16,7 +16,7 @@ class Network {
     return jsonDecode(response.body);
   }
 
-  static Future<String> put(String type, Map<String, String> body) async {
+  static Future<List<dynamic>> put(String type, Map<String, String> body) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";
@@ -24,10 +24,10 @@ class Network {
     headers["Content-Type"] = 'application/json';
     final response = await http.put(baseURL + type, body: body);
     printResponse("PUT", response);
-    return response.body;
+    return jsonDecode(response.body);
   }
 
-  static Future<String> post(String type, Map<String, String> body) async {
+  static Future<List<dynamic>> post(String type, Map<String, String> body) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";
@@ -35,10 +35,10 @@ class Network {
     headers["Content-Type"] = 'application/json';
     final response = await http.post(baseURL + type, body: body);
     printResponse("PUT", response);
-    return response.body;
+    return jsonDecode(response.body);
   }
 
-  static Future<String> delete(String type, Map<String, String> queries) async {
+  static Future<List<dynamic>> delete(String type, Map<String, String> queries) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";
@@ -46,7 +46,7 @@ class Network {
     headers["Content-Type"] = 'application/json';
     final response = await http.put(baseURL + type + convertToQueryString(queries));
     printResponse("PUT", response);
-    return response.body;
+    return jsonDecode(response.body);
   }
 
   static String convertToQueryString(Map<String, String> queries) {

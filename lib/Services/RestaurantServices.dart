@@ -1,5 +1,5 @@
 import 'package:samehomediffhacks/Models/Restaurant.dart';
-
+import '../Constants.dart';
 import '../Networking/Network.dart';
 
 class RestaurantServices {
@@ -11,5 +11,17 @@ class RestaurantServices {
       }
 
       return restaurants;
+    }
+
+    static Future<bool> submitSwipes(String accessCode, List<String> left, List<String> right) async {
+      Map<String, dynamic> body = Map();
+      body['accessCode'] = accessCode;
+      Map<String, dynamic> swipes = Map();
+      swipes['left'] = left;
+      swipes['right'] = right;
+      body['swipes'] = swipes;
+      List<dynamic> list = await Network.put(Constants.submitSwipes, body);
+      print("Submitted Swipes: " + list[0]);
+      return list[0];
     }
 }
