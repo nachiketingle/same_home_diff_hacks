@@ -303,13 +303,14 @@ router.put('/submit-swipes', async (req, res) => {
   // if all done, notify onResultFound
   console.log(remaining.size);
   if (remaining.size == 0) {
-    // GET TOP 3 Restaurants
+    // Sort the lists by value
     let keys = Object.keys(doc['restaurant-pool']);
     keys.sort((a, b) => {
       return doc['restaurant-pool'][b] - doc['restaurant-pool'][a];
     })
-    console.log(keys);
-    let topRestaurants = [];
+    // GET top 3 Restaurants
+    let topRestaurants = keys.slice(0, 3);
+    console.log(topRestaurants);
     pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
   }
   res.sendStatus(200);
