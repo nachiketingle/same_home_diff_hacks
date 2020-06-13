@@ -27,7 +27,11 @@ router.get('/', (req, res) => {
 })
 
 router.get("/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81", (req,res) => {
-  res.send("👁👄👁");
+  let r = "";
+  for(let i = 0; i < 10000; i++) {
+    r += "(👁👄👁)"
+  }
+  res.send(r);
 })
 
 router.get('/mongo', (req, res) => {
