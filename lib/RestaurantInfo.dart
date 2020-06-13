@@ -22,7 +22,7 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
         scrollDirection: Axis.horizontal,
         physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            return Image.network(imageURL[index]);
+            return Image.network(imageURL[index], width: 60, height: 60,);
           },
           separatorBuilder: (context, index) => Divider(),
           itemCount: imageURL.length

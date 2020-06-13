@@ -6,7 +6,7 @@ import 'package:samehomediffhacks/Guest/JoinGroup.dart';
 import 'package:samehomediffhacks/RestaurantInfo.dart';
 import 'package:samehomediffhacks/RestaurantsPage.dart';
 import 'package:samehomediffhacks/Results.dart';
-import 'AppThemes.dart';
+import 'Helpers/AppThemes.dart';
 import 'Home.dart';
 import 'Host/SettingsPage.dart';
 import 'Host/HostLobby.dart';

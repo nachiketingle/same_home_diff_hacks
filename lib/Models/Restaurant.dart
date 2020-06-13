@@ -10,6 +10,7 @@ class Restaurant {
   List<String> imageURLs;
   int reviewCount;
   bool votedFor;
+  int numVotes;
 
   Restaurant(this.name, this.lat, this.lng, this.rating, this.priceRange, this.reviews, this.imageURLs);
 

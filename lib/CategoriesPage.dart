@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'AppThemes.dart';
+import 'Helpers/AppThemes.dart';
 
 class CategoriesPage extends StatefulWidget {
   _CategoriesPageState createState() => _CategoriesPageState();

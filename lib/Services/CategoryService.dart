@@ -1,5 +1,5 @@
 import '../Networking/Network.dart';
-import '../Constants.dart';
+import '../Helpers/Constants.dart';
 
 class CategoryService {
   static Future<bool> startCategory(String accessCode) async {

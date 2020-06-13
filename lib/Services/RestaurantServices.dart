@@ -1,5 +1,5 @@
 import 'package:samehomediffhacks/Models/Restaurant.dart';
-import '../Constants.dart';
+import '../Helpers/Constants.dart';
 import '../Networking/Network.dart';
 
 class RestaurantServices {

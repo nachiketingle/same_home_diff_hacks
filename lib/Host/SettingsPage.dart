@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:samehomediffhacks/AppThemes.dart';
+import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 import '../Models/User.dart';
 import '../Services/GroupServices.dart';
-import '../DeviceInfo.dart';
+import '../Helpers/DeviceInfo.dart';
 
 class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();

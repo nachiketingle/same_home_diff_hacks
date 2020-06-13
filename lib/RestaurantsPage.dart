@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Models/Restaurant.dart';
 import 'package:samehomediffhacks/Services/RestaurantServices.dart';
-import 'AppThemes.dart';
+import 'Helpers/AppThemes.dart';
 
 class RestaurantsPage extends StatefulWidget {
   _RestaurantsPageState createState() => _RestaurantsPageState();

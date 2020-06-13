@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:samehomediffhacks/AppThemes.dart';
+import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 
 class JoinGroup extends StatefulWidget {
   _JoinGroupState createState() => _JoinGroupState();
