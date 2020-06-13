@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongo = require('../database/mongo');
 const { v4: uuidv4 } = require('uuid');
+const ACCESS_LENGTH_CODE = 4;
 
 router.get('/get-restaurants', (req, res) => {
   let list = [{"name": "In-N-Out",
@@ -37,7 +38,7 @@ router.get('/get-restaurants', (req, res) => {
 
 router.put('/create-group', (req, res) => {
   // Generate an access code
-  let accessCode = (uuidv4().split("-"))[0];
+  let accessCode = (uuidv4().split("-"))[0].substring(0, ACCESS_LENGTH_CODE);
 
   // Parse body
   let groupName = req.body['groupName'];
@@ -46,7 +47,8 @@ router.put('/create-group', (req, res) => {
   let latitude = req.body['latitude'];
   let longitude = req.body['longitude'];
 
-  let group = { accessCode:{
+  let group = {};
+  group[accessCode] = {
     'groupName': groupName,
     'maxDistance': maxDistance,
     'latitude': latitude,
@@ -54,7 +56,7 @@ router.put('/create-group', (req, res) => {
     'members': [name],
     'categories': {},
     'restuarant-pool': {}
-  }}
+  };
 
   mongo.addDocument(group, 'group');
 
@@ -65,6 +67,9 @@ router.put('/join-group', (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
   let name = req.body['name'];
+  console.log("ACCESS CODE: " + accessCode);
+
+  mongo.findDocument(accessCode, "group");
 
   res.sendStatus(200);
 });

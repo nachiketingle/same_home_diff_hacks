@@ -23,5 +23,26 @@ module.exports = {
    finally {
      await client.close();
    }
+ },
+ findDocument: async function(name, collection){
+   try {
+    await client.connect();
+    console.log("Connected correctly to server");
+    const db = client.db(dbName);
+    console.log(name);
+    // Use the collection "people"
+    const col = db.collection(collection);
+    col.find().toArray(function(err, documents) {
+      console.log(documents);
+    });
+
+   } catch (err) {
+    console.log(err.stack);
   }
+
+  finally {
+    await client.close();
+  }
+ }
+
 }
