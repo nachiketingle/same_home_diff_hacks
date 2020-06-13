@@ -23,13 +23,13 @@ const CATEGORIES = {
 };
 
 router.get('/', (req, res) => {
-  res.send("Hi Victor.");
+  res.send('Hi Victor.');
 })
 
-router.get("/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81", (req,res) => {
-  let r = "";
-  for(let i = 0; i < 10000; i++) {
-    r += "(👁👄👁)"
+router.get('/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81', (req, res) => {
+  let r = '';
+  for (let i = 0; i < 10000; i++) {
+    r += '(👁👄👁)'
   }
   res.send(r);
 })
@@ -76,6 +76,7 @@ router.get('/get-restaurants', (req, res) => {
   res.json(list);
 })
 
+// Create a group
 router.put('/create-group', async (req, res) => {
   // Generate an access code
   let accessCode = (uuidv4().split('-'))[0].substring(0, ACCESS_LENGTH_CODE);
@@ -87,6 +88,7 @@ router.put('/create-group', async (req, res) => {
   let latitude = req.body['latitude'];
   let longitude = req.body['longitude'];
 
+  // Database Document
   let group = {
     'accessCode': accessCode,
     'groupName': groupName,
@@ -94,64 +96,139 @@ router.put('/create-group', async (req, res) => {
     'latitude': latitude,
     'longitude': longitude,
     'members': [name],
-    'categories': {},
-    'restuarant-pool': {}
+    'categories': [],
+    'restuarant-pool': {},
+    'category-finishers': [],
+    'swipe-finishers': []
   };
 
+  // keep generating accessCodes until a valid one is generated
   while (true) {
+    // finds a doc with access code
     let doc = await mongo.findDocument(accessCode, 'group');
-    console.log(doc);
+    // if doc does not exist
     if (doc == null) {
+      // create the doc
       mongo.addDocument(group, 'group');
       break;
     }
+    // retry access code
     accessCode = (uuidv4().split('-'))[0].substring(0, ACCESS_LENGTH_CODE);
     group['accessCode'] = accessCode;
   }
-
+  // respond with the access code
   res.send(accessCode);
 });
 
+// Join a group
 router.put('/join-group', async (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
   let name = req.body['name'];
 
-  const doc = await mongo.findDocument(accessCode, 'group');
-  console.log(doc)
-  if (doc['members'].includes(name)) {
-    res.sendStatus(409);
-    return;
+  // finds group
+  let doc = await mongo.findDocument(accessCode, 'group');
+  // if group exists
+  if (doc) {
+    // if name is valid
+    if (!doc['members'].includes(name)) {
+      // add members 
+      doc['members'].push(name);
+      //  update document
+      mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
+      // Send pusher triggerEvent
+      pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
+      res.sendStatus(200);
+    }
+    else {
+      res.status(409).send('Name already exists!');
+    }
   }
-  doc['members'].push(name);
-
-  mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
-
-  // Send pusher triggerEvent
-  pusher.triggerEvent(accessCode, 'onGuestJoin', JSON.stringify(doc['members']));
-  res.sendStatus(200);
+  // if group does not exist
+  else {
+    res.status(400).send('Access Code is Invalid!');
+  }
 });
 
+// Host starts category
 router.put('/start-category', (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
-  pusher.triggerEvent(accessCode, 'onCategoryStart', JSON.stringify(CATEGORIES));
+  // Broadcast categories to channel
+  pusher.triggerEvent(accessCode, 'onCategoryStart', CATEGORIES);
   res.json(CATEGORIES);
 });
 
-router.put('/set-categories', (req, res) => {
+// User finishes entering categories
+router.put('/set-categories', async (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
+  let name = req.body['name'];
   let categories = req.body['categories'];
 
+  // finds group
+  let doc = await mongo.findDocument(accessCode, 'group');
+
+  // join categories and group categories
+  doc['categories'] = [...doc['categories'], ...categories]
+  // remove duplicates
+  doc['categories'] = [...(new Set(doc['categories']))]
+  // add name to finished list
+  doc['category-finishers'].push(name);
+
+  //  update document
+  mongo.updateDocument(accessCode, 'categories', doc['categories'], 'group');
+  mongo.updateDocument(accessCode, 'category-finishers', doc['category-finishers'], 'group');
+
+  // notify people still choosing onCategoryEnd
+  let remaining = new Set(doc['members']);
+  doc['category-finishers'].forEach(name => remaining.delete(name));
+  pusher.triggerEvent(accessCode, 'onCategoryEnd', [...remaining]);
+  // if all done, notify onSwipeStart
+  if (remaining.size == 0) {
+    // TODO: GET THE RESTAURANTS FROM YELP
+    let restaurants = [];
+    pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
+  }
   res.sendStatus(200);
 });
 
-router.put('/submit-swipes', (req, res) => {
+// User finishes swiping
+router.put('/submit-swipes', async (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
+  let name = req.body['name']
   let swipes = req.body['swipes'];
 
+  // finds group
+  const doc = await mongo.findDocument(accessCode, 'group');
+
+  // count each vote in restaurant-pool
+  swipes.forEach(swipe => {
+    if (doc['restuarant-pool'].hasOwnProperty(swipe)) {
+      doc['restuarant-pool'] += 1;
+    }
+    else {
+      doc['restuarant-pool'] = 1;
+    }
+  })
+  // add name to finished list
+  doc['swipe-finishers'].push(name);
+
+  //  update document
+  mongo.updateDocument(accessCode, 'restaurant-pool', doc['restaurant-pool'], 'group');
+  mongo.updateDocument(accessCode, 'swipe-finishers', doc['swipe-finishers'], 'group');
+
+  // notify people still choosing onSwipeEnd
+  let remaining = new Set(doc['members']);
+  doc['swipe-finishers'].forEach(name => remaining.delete(name));
+  pusher.triggerEvent(accessCode, 'onSwipeEnd', [...remaining]);
+  // if all done, notify onResultFound
+  if (remaining.size == 0) {
+    // TODO: GET TOP 3 Restaurants
+    let topRestaurants = [];
+    pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
+  }
   res.sendStatus(200);
 });
 
