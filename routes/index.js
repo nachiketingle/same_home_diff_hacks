@@ -1,17 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var mongo = require('mongodb');
 const { v4: uuidv4 } = require('uuid');
-const { MongoClient } = require('mongodb');
 
-const ACCESS_CODE_LENGTH = 6
-
-const url = process.env.MONGO_URL;
-console.log(url);
-const client = new MongoClient(url);
-const dbName = 'tzuyu';
-
-router.put('/get-restuarants', (req, res) => {
+router.get('/get-restuarants', (req, res) => {
   var list = [{"name": "In-N-Out",
               "id": "WavvLdfdP6g8aZTtbBQHTw",
               "rating": 4.5,
