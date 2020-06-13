@@ -4,7 +4,7 @@ var mongo = require('../lib/mongo');
 const fetch = require('node-fetch');
 const pusher = require('../lib/pusher');
 const { v4: uuidv4 } = require('uuid');
-const YELP_SEARCH_URL = 'https://api.yelp.com/v3/businesses/search';
+const YELP_BUSINESSES_URL = 'https://api.yelp.com/v3/businesses/';
 const ACCESS_LENGTH_CODE = 4;
 const METERS_PER_MILE = 1609.34;
 const CATEGORIES = {
@@ -120,7 +120,7 @@ router.put('/create-group', async (req, res) => {
     'longitude': longitude,
     'members': [name],
     'categories': [],
-    'restuarant-pool': {},
+    'restaurant-pool': {},
     'category-finishers': [],
     'swipe-finishers': []
   };
@@ -161,7 +161,7 @@ router.put('/join-group', async (req, res) => {
       mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
       // Send pusher triggerEvent
       pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
-      res.status(200).json({'message':'Success'});
+      res.status(200).json({'message':'Success', 'groupName':doc['groupName']});
     }
     else {
       res.status(409).json({'error':'Name already exists!'});
@@ -208,20 +208,58 @@ router.put('/set-categories', async (req, res) => {
   pusher.triggerEvent(accessCode, 'onCategoryEnd', [...remaining]);
   // if all done, notify onSwipeStart
   if (remaining.size == 0) {
-    //Sending Yelp API request on /businesses/search endpoint
+    // Sending Yelp API request on /businesses/search endpoint
     const meters = Math.min(Math.floor(doc['maxDistance'] * METERS_PER_MILE), 4000);
-
     const params = {
       headers:{'Authorization': 'Bearer ' + process.env.YELP_API, 'content-type':'application/json'},
       method:  'get'
     }
-    const url = YELP_SEARCH_URL + '?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString();
+    let url = YELP_BUSINESSES_URL + 'search?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString();
     console.log(url);
-    fetch(url, params)
-    .then(data=>data.json())
-    .then(json=>console.log(json));
+    let data = await fetch(url, params);
+    let json = await data.json();
+    let ids = [];
+    // append all business ids to ids array
+    json['businesses'].forEach(element => ids.push(element['id']));
+    console.log(ids);
 
-    let restaurants = [];
+    // Get business details for yelp
+    ids.forEach(async (id) => {
+      // Get businesses detials (except reviews)
+      url = YELP_BUSINESSES_URL + id;
+      data = await fetch(url, params);
+      json = await data.json();
+      console.log(json);
+
+      let restaurant = {};
+      restaurant['name'] = json['name'];
+      restaurant['id'] = json['id'];
+      restaurant['rating'] = json['rating'];
+      restaurant['review_count'] = json['review_count'];
+      restaurant['price'] = json['price'];
+      let coordinates = json['coordinates'];
+      restaurant['latitude'] = coordinates['latitude'];
+      restaurant['longitude'] = coordinates['longitude'];
+      restaurant['photos'] = json['photos'];
+      restaurant['reviews'] = [];
+
+      // Get business reviews
+      url = url + '/reviews';
+      data = await fetch(url, params);
+      json = await data.json();
+      // json['reviews'].forEach((review) => {
+      //   let r = {};
+      //   r['rating'] = review['rating'];
+      //   r['time'] = review['time_created'];
+      //   r['text'] = review['text'];
+      //   restaurant['reviews'].push(r);
+      // });
+
+    });
+
+
+    restaurants = []
+
     pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
   }
   res.sendStatus(200);
@@ -239,11 +277,11 @@ router.put('/submit-swipes', async (req, res) => {
 
   // count each vote in restaurant-pool
   swipes.forEach(swipe => {
-    if (doc['restuarant-pool'].hasOwnProperty(swipe)) {
-      doc['restuarant-pool'] += 1;
+    if (doc['restaurant-pool'].hasOwnProperty(swipe)) {
+      doc['restaurant-pool'] += 1;
     }
     else {
-      doc['restuarant-pool'] = 1;
+      doc['restaurant-pool'] = 1;
     }
   })
   // add name to finished list
