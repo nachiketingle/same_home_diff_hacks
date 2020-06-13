@@ -35,7 +35,7 @@ router.get("/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81", (req,res) => {
 })
 
 router.get("/kevin", (req,res) => {
-  res.send("<p style="font-size:500px;">🤡</p>");
+  res.send("<p style=\"font-size:500px;\">🤡</p>");
 })
 
 router.get("/kasper", (req,res) => {
