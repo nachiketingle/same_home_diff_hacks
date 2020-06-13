@@ -20,6 +20,10 @@ const CATEGORIES = {'tradamerican': 'American',
                     'vegetarian': 'Vegetarian',
                     'vietnamese': 'Vietnamese'};
 
+router.get('/', (req, res) => {
+  res.send("Hi Victor.")
+})
+
 router.get('/get-restaurants', (req, res) => {
   let list = [{'name': 'In-N-Out',
               'id': 'WavvLdfdP6g8aZTtbBQHTw',
