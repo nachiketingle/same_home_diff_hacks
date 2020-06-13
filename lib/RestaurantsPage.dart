@@ -28,16 +28,20 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
     for(Restaurant rest in _restaurants) {
       cards.add(
         Dismissible(
-          key: Key(rest.name),
+          key: UniqueKey(),
           onDismissed: (dir) {
-            _restaurants.remove(rest);
-            _finishedList.add(rest);
             if(dir == DismissDirection.startToEnd) {
               rest.votedFor = true;
             }
             else {
               rest.votedFor = false;
             }
+            setState(() {
+              _restaurants.remove(rest);
+              _finishedList.add(rest);
+
+            });
+
           },
           child: Center(
             child: GestureDetector(
