@@ -6,9 +6,10 @@ class GroupServices {
     Map<String, dynamic> json = Map();
     json['groupName'] = groupName;
     json['name'] =  name;
-    json['latitude'] = lat;
-    json['longitude'] = lng;
-    json['maxDistance'] = maxDistance;
+    json['latitude'] = lat.toString();
+    json['longitude'] = lng.toString();
+    json['maxDistance'] = maxDistance.toString();
+    print("Creating a group");
     List<dynamic> list = await Network.put("create-group", json);
     print("Create group response: " + list[0]);
     return list[0];

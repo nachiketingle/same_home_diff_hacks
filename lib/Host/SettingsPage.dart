@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/AppThemes.dart';
 import '../Models/User.dart';
+import '../Services/GroupServices.dart';
+import '../DeviceInfo.dart';
 
 class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
@@ -12,29 +14,45 @@ class _SettingsPageState extends State<SettingsPage> {
   TextEditingController _groupNameController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   double miles = 10;
+  double lat;
+  double lng;
+  bool _pinging = false;
 
-  void getAccessCode() {
+  void getAccessCode() async {
     if (!validFields())
       return;
+    if(_pinging)
+      return;
 
+    _pinging = true;
     // TODO: Ping server for access code
-    bool success = true;
-    if(success) {
-      // TODO: If successful, create user and go to next page
-      User user = User(
-        true,
-        _nameController.text.trim(),
-        "A7G8F",
-        _groupNameController.text.trim(),
-      );
-      Navigator.pushNamed(context, "/createGroup", arguments: user);
-    }
-    else {
-      // TODO: If not, indicate it with snack bar
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("Unable to retrieve code"),
-      ));
-    }
+    await DeviceInfo.getLocationData().then((value) {
+      double lat = value.latitude;
+      double lng = value.longitude;
+      GroupServices.createGroup(_groupNameController.text.trim(),
+          _nameController.text.trim(), lat, lng, miles).then((value) {
+        // If successful, create user and go to next page
+        User user = User(
+          true,
+          _nameController.text.trim(),
+          "A7G8F",
+          _groupNameController.text.trim(),
+        );
+        Navigator.pushNamed(context, "/createGroup", arguments: user);
+      }).timeout(Duration(seconds: 30),
+      onTimeout: () {
+        // If not, indicate it with snack bar
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("TIMEOUT: Unable to retrieve code"),
+        ));
+      });/*.catchError((err) {
+        // If not, indicate it with snack bar
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("ERROR: " + err.toString()),
+        ));
+      });*/
+    });
+    _pinging = false;
   }
 
   bool validFields() {
@@ -56,7 +74,12 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text("Settings Page"),
         actions: <Widget>[
-
+          IconButton(
+            icon: Icon(Icons.http),
+            onPressed: () {
+              GroupServices.joinGroup("c65a");
+            },
+          )
         ],
       ),
 

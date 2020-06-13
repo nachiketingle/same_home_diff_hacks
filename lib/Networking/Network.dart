@@ -16,13 +16,15 @@ class Network {
     return jsonDecode(response.body);
   }
 
-  static Future<List<dynamic>> put(String type, Map<String, String> body) async {
+  static Future<List<dynamic>> put(String type, Map<String, dynamic> body) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";
     }
     headers["Content-Type"] = 'application/json';
+    print("Sending PUT: " + baseURL + type);
     final response = await http.put(baseURL + type, body: body);
+    print("Received PUT");
     printResponse("PUT", response);
     return jsonDecode(response.body);
   }
