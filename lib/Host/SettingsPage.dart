@@ -61,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
     _scaffoldKey.currentState.showSnackBar(
       SnackBar(
-        content: Text("Please fill out all fields"),
+        content: Text("Please fill out all of fields"),
       )
     );
     return false;
