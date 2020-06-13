@@ -161,12 +161,12 @@ router.put('/join-group', async (req, res) => {
       res.sendStatus(200);
     }
     else {
-      res.status(409).send('Name already exists!');
+      res.status(409).json({'error':'Name already exists!'});
     }
   }
   // if group does not exist
   else {
-    res.status(400).send('Access Code is Invalid!');
+    res.status(400).json({'error':'Access Code is invalid!'});
   }
 });
 
