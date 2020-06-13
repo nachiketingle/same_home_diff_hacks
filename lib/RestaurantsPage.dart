@@ -10,8 +10,8 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
   List<Restaurant> _restaurants = List<Restaurant>();
   List<Restaurant> _finishedList = List<Restaurant>();
 
-  void _showMoreInfo() {
-    Navigator.pushNamed(context, "/restaurantInfo");
+  void _showMoreInfo(Restaurant restaurant) {
+    Navigator.pushNamed(context, "/restaurantInfo", arguments: restaurant);
   }
 
   void _addRestaurants() {
@@ -40,11 +40,14 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
             _finishedList.add(rest);
           },
           child: Center(
-            child: Card(
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 0.7,
-                  child: Text(rest.name)
+            child: GestureDetector(
+              onTap: () => _showMoreInfo(rest),
+              child: Card(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.7,
+                    child: Text(rest.name)
+                ),
               ),
             ),
           ),
