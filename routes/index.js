@@ -1,8 +1,24 @@
 var express = require('express');
 var router = express.Router();
 var mongo = require('../lib/mongo');
+const pusher = require('../lib/pusher');
 const { v4: uuidv4 } = require('uuid');
 const ACCESS_LENGTH_CODE = 4;
+const CATEGORIES = {'tradamerican': 'American',
+                    'asianfusion': 'Asian Fushion',
+                    'bbq': 'Barbeque',
+                    'breakfast_brunch': 'Breakfast & Brunch',
+                    'buffets': 'Buffets',
+                    'burgers': 'Burgers',
+                    'cafes': 'Cafes',
+                    'chicken_wings': 'Chicken Wings',
+                    'chinese': 'Chinese',
+                    'comfortfood': 'Comfort Food',
+                    'korean': 'Korean',
+                    'japanese': 'Japanese',
+                    'thai': 'Thai',
+                    'vegetarian': 'Vegetarian',
+                    'vietnamese': 'Vietnamese'};
 
 router.get('/get-restaurants', (req, res) => {
   let list = [{'name': 'In-N-Out',
@@ -86,6 +102,9 @@ router.put('/join-group', async (req, res) => {
   doc['members'].push(name);
 
   mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
+
+  // Send pusher triggerEvent
+  //pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
   res.sendStatus(200);
 
 });
@@ -93,7 +112,8 @@ router.put('/join-group', async (req, res) => {
 router.put('/start-category', (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
-  res.sendStatus(200);
+  //pusher.triggerEvent(accessCode, 'onCategoryStart', JSON.stringify(CATEGORIES));
+  res.json(CATEGORIES);
 });
 
 router.put('/set-categories', (req, res) => {
