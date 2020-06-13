@@ -99,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Text("Max distance: " + miles.toStringAsFixed(2) + " miles"),
             Slider(
               min: 1,
-              max: 50,
+              max: 25,
               value: miles,
               onChanged: (val) {
                 setState(() {
