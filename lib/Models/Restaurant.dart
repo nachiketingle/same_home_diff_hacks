@@ -1,4 +1,6 @@
 
+import 'package:samehomediffhacks/Models/Review.dart';
+
 class Restaurant {
   String name;
   String id;
@@ -6,7 +8,7 @@ class Restaurant {
   double lng;
   double rating;
   String priceRange;
-  List<String> reviews;
+  List<Review> reviews;
   List<String> imageURLs;
   int reviewCount;
   bool votedFor;
@@ -30,6 +32,29 @@ class Restaurant {
     for(String url in json["photos"]) {
       imageURLs.add(url);
     }
+    reviews = List();
+    reviews.add(Review(
+      3,
+      "An Amzing Store",
+      "Sunday, 30:00"
+    ));
+
+    reviews.add(Review(
+        -1,
+        "Undefined store. Could not find it",
+        "Some random day"
+    ));
+
+    reviews.add(Review(
+        5,
+        "What was this! This was the worst store ever!"
+            "I cannot believe they sold me this abombination. I come in and ask"
+            "for some meat, and they send in a random objects. whjtjhjta"
+            "lkjalskdjflkajsd;lkjf;lakshdfg"
+            "ldfugiojieonrvodsfdihgoiahfdlkgnlsnkldhi8rhkjshgkj"
+            "shkfhsgkhkjhkjhsmmvkhiuzhijkjkjkdfgkjdjfghjkjkhjhsm,oiu",
+        "1/2/4/5"
+    ));
   }
 
 }

@@ -35,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
         User user = User(
           true,
           _nameController.text.trim(),
-          "A7G8F",
+          value,
           _groupNameController.text.trim(),
         );
         Navigator.pushNamed(context, "/createGroup", arguments: user);

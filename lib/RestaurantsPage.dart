@@ -9,7 +9,8 @@ class RestaurantsPage extends StatefulWidget {
 
 class _RestaurantsPageState extends State<RestaurantsPage> {
   List<Restaurant> _restaurants = List<Restaurant>();
-  List<Restaurant> _finishedList = List<Restaurant>();
+  List<Restaurant> _leftList = List<Restaurant>();
+  List<Restaurant> _rightList = List<Restaurant>();
 
   void _showMoreInfo(Restaurant restaurant) {
     Navigator.pushNamed(context, "/restaurantInfo", arguments: restaurant);
@@ -32,14 +33,14 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
           onDismissed: (dir) {
             if(dir == DismissDirection.startToEnd) {
               rest.votedFor = true;
+              _rightList.add(rest);
             }
             else {
               rest.votedFor = false;
+              _leftList.add(rest);
             }
             setState(() {
               _restaurants.remove(rest);
-              _finishedList.add(rest);
-
             });
 
           },
@@ -50,7 +51,14 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: MediaQuery.of(context).size.height * 0.7,
-                    child: Text(rest.name)
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Image.network(rest.imageURLs[0]),
+                        Text(rest.name, style: TextStyle(fontSize: 20),)
+                      ],
+                    )
                 ),
               ),
             ),

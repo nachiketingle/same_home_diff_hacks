@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Models/Review.dart';
 import 'package:samehomediffhacks/Models/Restaurant.dart';
 
 class RestaurantInfoPage extends StatefulWidget {
@@ -24,10 +25,47 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
         scrollDirection: Axis.horizontal,
         physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            return Image.network(imageURL[index], width: 200, height: 200,);
+            return Image.network(imageURL[index], width: 150, height: 150,);
+          },
+          separatorBuilder: (context, index) => Divider(indent: 5,),
+          itemCount: imageURL.length
+      ),
+    );
+  }
+
+  /// Returns the list view for the reviews of the restaurants
+  Widget _reviewsListView() {
+    List<Review> reviews = _restaurant.reviews;
+
+    return Expanded(
+      child: ListView.separated(
+        shrinkWrap: true,
+          physics: AlwaysScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+          Review curr = reviews[index];
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: Column(
+                        children: <Widget>[
+                          Text(curr.text),
+                          Text(curr.time, style: TextStyle(color: Colors.grey),)
+                        ],
+                      ),
+                    ),
+                    Text(curr.rating.toString())
+                  ],
+                ),
+              ),
+            );
           },
           separatorBuilder: (context, index) => Divider(),
-          itemCount: imageURL.length
+          itemCount: reviews.length
       ),
     );
   }
@@ -38,7 +76,7 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("RestaurantInfo Page"),
+        title: Text(_restaurant.name.toString()),
       ),
 
       body: Center(
@@ -46,7 +84,8 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _imagesListView(),
-            Text("This is the Restaurant Info page"),
+            Text("Rating: " + _restaurant.rating.toString() + "     Price Range: " + _restaurant.priceRange.toString()),
+            _reviewsListView(),
           ],
         ),
       ),

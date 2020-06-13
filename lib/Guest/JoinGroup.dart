@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:samehomediffhacks/Helpers/AppThemes.dart';
+import 'package:samehomediffhacks/Helpers/Constants.dart';
 import 'package:samehomediffhacks/Models/User.dart';
 import 'package:samehomediffhacks/Services/GroupServices.dart';
 
@@ -16,7 +16,7 @@ class _JoinGroupState extends State<JoinGroup> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   void submitCode() async {
-    if(_pinging) {
+    if(_isValid() && _pinging) {
       return;
     }
     _pinging = true;
@@ -38,6 +38,13 @@ class _JoinGroupState extends State<JoinGroup> {
 
   }
 
+  bool _isValid() {
+    if(_nameController.text.trim().length > 0)
+      return true;
+
+    return false;
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
@@ -47,7 +54,7 @@ class _JoinGroupState extends State<JoinGroup> {
           IconButton(
             icon: Icon(Icons.http),
             onPressed: () {
-              _accessCodeController.text = "c65a";
+              _accessCodeController.text = Constants.accessCode;
               submitCode();
             },
           )
