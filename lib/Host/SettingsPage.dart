@@ -18,20 +18,23 @@ class _SettingsPageState extends State<SettingsPage> {
       return;
 
     // TODO: Ping server for access code
-
-    // TODO: If successful, create user and go to next page
-    User user = User(
-      true,
-      _nameController.text.trim(),
-      "A7G8F",
-      _groupNameController.text.trim()
-    );
-    Navigator.pushNamed(context, "/createGroup", arguments: user);
-
-    // TODO: If not, indicate it with snack bar
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text("Unable to retrieve code"),
-    ));
+    bool success = true;
+    if(success) {
+      // TODO: If successful, create user and go to next page
+      User user = User(
+        true,
+        _nameController.text.trim(),
+        "A7G8F",
+        _groupNameController.text.trim(),
+      );
+      Navigator.pushNamed(context, "/createGroup", arguments: user);
+    }
+    else {
+      // TODO: If not, indicate it with snack bar
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Unable to retrieve code"),
+      ));
+    }
   }
 
   bool validFields() {
