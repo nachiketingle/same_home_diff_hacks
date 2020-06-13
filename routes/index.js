@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var mongo = require('../database/mongo');
 const { v4: uuidv4 } = require('uuid');
 
-router.get('/get-restuarants', (req, res) => {
-  var list = [{"name": "In-N-Out",
+router.get('/get-restaurants', (req, res) => {
+  let list = [{"name": "In-N-Out",
               "id": "WavvLdfdP6g8aZTtbBQHTw",
               "rating": 4.5,
               "review_count": 5296,
@@ -36,45 +37,57 @@ router.get('/get-restuarants', (req, res) => {
 
 router.put('/create-group', (req, res) => {
   // Generate an access code
-  var accessCode = (uuidv4().split("-"))[0];
+  let accessCode = (uuidv4().split("-"))[0];
 
   // Parse body
-  var groupName = req.body['groupName'];
-  var name = req.body['name'];
-  var maxDistance = req.body['maxDistance'];
-  var latitude = req.body['latitude'];
-  var longitude = req.body['longitude'];
+  let groupName = req.body['groupName'];
+  let name = req.body['name'];
+  let maxDistance = req.body['maxDistance'];
+  let latitude = req.body['latitude'];
+  let longitude = req.body['longitude'];
+
+  let group = { accessCode:{
+    'groupName': groupName,
+    'maxDistance': maxDistance,
+    'latitude': latitude,
+    'longitude': longitude,
+    'members': [name],
+    'categories': {},
+    'restuarant-pool': {}
+  }}
+
+  mongo.addDocument(group, 'group');
 
   res.send(accessCode);
 });
 
 router.put('/join-group', (req, res) => {
   // Parse body
-  var accessCode = req.body['accessCode'];
-  var name = req.body['name'];
+  let accessCode = req.body['accessCode'];
+  let name = req.body['name'];
 
   res.sendStatus(200);
 });
 
 router.put('/start-category', (req, res) => {
   // Parse body
-  var accessCode = req.body['accessCode'];
+  let accessCode = req.body['accessCode'];
 
   res.sendStatus(200);
 });
 
 router.put('/set-categories', (req, res) => {
   // Parse body
-  var accessCode = req.body['accessCode'];
-  var categories = req.body['categories'];
+  let accessCode = req.body['accessCode'];
+  let categories = req.body['categories'];
 
   res.sendStatus(200);
 });
 
 router.put('/submit-swipes', (req, res) => {
   // Parse body
-  var accessCode = req.body['accessCode'];
-  var swipes = req.body['swipes'];
+  let accessCode = req.body['accessCode'];
+  let swipes = req.body['swipes'];
 
   res.sendStatus(200);
 });
