@@ -23,7 +23,15 @@ const CATEGORIES = {
 };
 
 router.get('/', (req, res) => {
-  res.send("Hi Victor.")
+  res.send("Hi Victor.");
+})
+
+router.get("/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81", (req,res) => {
+  res.send("👁👄👁");
+})
+
+router.get('/mongo', (req, res) => {
+  mongo.viewDB('group', (docs) => res.json(docs))
 })
 
 router.get('/get-restaurants', (req, res) => {
@@ -106,6 +114,7 @@ router.put('/join-group', async (req, res) => {
   let name = req.body['name'];
 
   const doc = await mongo.findDocument(accessCode, 'group');
+  console.log(doc)
   if (doc['members'].includes(name)) {
     res.sendStatus(409);
     return;
