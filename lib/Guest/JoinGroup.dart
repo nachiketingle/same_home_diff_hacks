@@ -19,15 +19,16 @@ class _JoinGroupState extends State<JoinGroup> {
     _pinging = true;
     String code = _accessCodeController.text;
     String name = _nameController.text.trim();
+    _pinging = false;
+    Navigator.pushNamed(context, "/guestLobby");
+    //GroupServices.joinGroup(code).then((value) {
 
-    GroupServices.joinGroup(code).then((value) {
-
-    });
+    //});
 
   }
 
   bool _isValid() {
-
+    return true;
   }
 
   Widget build(BuildContext context) {
