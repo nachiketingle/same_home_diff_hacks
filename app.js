@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config();
 var endpoints = require('./routes/index');
+var webhookRouter = require('./routes/webhook');
 
 var app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', endpoints);
+app.use('/webhook', webhookRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
