@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var mongo = require('../lib/mongo');
+const fetch = require('node-fetch');
 const pusher = require('../lib/pusher');
 const { v4: uuidv4 } = require('uuid');
+const YELP_SEARCH_URL = 'https://api.yelp.com/v3/businesses/search';
 const ACCESS_LENGTH_CODE = 4;
+const METERS_PER_MILE = 1609.34;
 const CATEGORIES = {
   'tradamerican': 'American',
   'asianfusion': 'Asian Fushion',
@@ -188,7 +191,6 @@ router.put('/set-categories', async (req, res) => {
 
   // finds group
   let doc = await mongo.findDocument(accessCode, 'group');
-
   // join categories and group categories
   doc['categories'] = [...doc['categories'], ...categories]
   // remove duplicates
@@ -206,7 +208,19 @@ router.put('/set-categories', async (req, res) => {
   pusher.triggerEvent(accessCode, 'onCategoryEnd', [...remaining]);
   // if all done, notify onSwipeStart
   if (remaining.size == 0) {
-    // TODO: GET THE RESTAURANTS FROM YELP
+    //Sending Yelp API request on /businesses/search endpoint
+    const meters = Math.min(Math.floor(doc['maxDistance'] * METERS_PER_MILE), 4000);
+
+    const params = {
+      headers:{'Authorization': 'Bearer ' + process.env.YELP_API, 'content-type':'application/json'},
+      method:  'get'
+    }
+    const url = YELP_SEARCH_URL + '?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString();
+    console.log(url);
+    fetch(url, params)
+    .then(data=>data.json())
+    .then(json=>console.log(json));
+
     let restaurants = [];
     pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
   }
