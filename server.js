@@ -2,6 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 var tasks = require('./src/tasks.js')
+var Pusher = require('pusher');
+
+var pusher = new Pusher({
+  appId: '1018493',
+  key: '04d5685fb9e5355b3a15',
+  secret: '2cca5e65ec6137944af4',
+  cluster: 'us3',
+  encrypted: true
+});
+
+pusher.trigger('my-channel', 'my-event', {
+  'message': 'hello world'
+});
 
 const app = express();
 const PORT = 5000;
