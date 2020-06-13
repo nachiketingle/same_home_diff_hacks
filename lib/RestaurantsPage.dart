@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Models/Restaurant.dart';
+import 'package:samehomediffhacks/Services/RestaurantServices.dart';
 import 'AppThemes.dart';
 
 class RestaurantsPage extends StatefulWidget {
@@ -14,12 +15,11 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
     Navigator.pushNamed(context, "/restaurantInfo", arguments: restaurant);
   }
 
-  void _addRestaurants() {
-    _restaurants.add(Restaurant.minimum("InnOut"));
-    _restaurants.add(Restaurant.minimum("TacoBell"));
-    _restaurants.add(Restaurant.minimum("Subway"));
-    _restaurants.add(Restaurant.minimum("McDonald's"));
-    _restaurants.add(Restaurant.minimum("Falafel Stop"));
+  void _addRestaurants() async {
+    _restaurants = await RestaurantServices.getRestaurants();
+    setState(() {
+
+    });
   }
 
   List<Widget> _getCards() {
@@ -30,14 +30,14 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
         Dismissible(
           key: Key(rest.name),
           onDismissed: (dir) {
+            _restaurants.remove(rest);
+            _finishedList.add(rest);
             if(dir == DismissDirection.startToEnd) {
               rest.votedFor = true;
             }
             else {
               rest.votedFor = false;
             }
-            _restaurants.remove(rest);
-            _finishedList.add(rest);
           },
           child: Center(
             child: GestureDetector(

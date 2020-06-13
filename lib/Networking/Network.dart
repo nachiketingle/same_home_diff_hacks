@@ -1,18 +1,19 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
 
 class Network {
   static final String baseURL = DotEnv().env['SERVER_URL'];
 
-  static Future<String> get(String type, Map<String, String> queries) async {
+  static Future<List<dynamic>> get(String type, Map<String, String> queries) async {
     Map<String, String> headers = Map();
     if(type == null) {
       type = "";
     }
-    headers["Content-Type"] = 'text/plain';
+    headers["Content-Type"] = 'application/json';
     final response = await http.get(baseURL + type + convertToQueryString(queries));
     printResponse("GET", response);
-    return response.body;
+    return jsonDecode(response.body);
   }
 
   static Future<String> put(String type, Map<String, String> body) async {
@@ -20,7 +21,7 @@ class Network {
     if(type == null) {
       type = "";
     }
-    headers["Content-Type"] = 'text/plain';
+    headers["Content-Type"] = 'application/json';
     final response = await http.put(baseURL + type, body: body);
     printResponse("PUT", response);
     return response.body;
@@ -31,7 +32,7 @@ class Network {
     if(type == null) {
       type = "";
     }
-    headers["Content-Type"] = 'text/plain';
+    headers["Content-Type"] = 'application/json';
     final response = await http.post(baseURL + type, body: body);
     printResponse("PUT", response);
     return response.body;
@@ -42,7 +43,7 @@ class Network {
     if(type == null) {
       type = "";
     }
-    headers["Content-Type"] = 'text/plain';
+    headers["Content-Type"] = 'application/json';
     final response = await http.put(baseURL + type + convertToQueryString(queries));
     printResponse("PUT", response);
     return response.body;
