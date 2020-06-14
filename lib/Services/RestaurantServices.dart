@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:samehomediffhacks/Models/Restaurant.dart';
 import '../Helpers/Constants.dart';
 import '../Networking/Network.dart';
@@ -20,7 +22,7 @@ class RestaurantServices {
       Map<String, dynamic> body = Map();
       body['accessCode'] = accessCode;
       Map<String, dynamic> swipes = Map();
-      swipes['swipes'] = ids;
+      swipes['swipes'] = jsonEncode(ids);
       body['swipes'] = swipes;
       List<dynamic> list = await Network.put(Constants.submitSwipes, body);
       print("Submitted Swipes: " + list.toString());
