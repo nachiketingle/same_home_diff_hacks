@@ -82,7 +82,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.network(rest.imageURLs[0]),
+                        Expanded(child: Image.network(rest.imageURLs[0])),
                         Text(rest.name, style: TextStyle(fontSize: 20),)
                       ],
                     )
@@ -103,7 +103,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
 
   Widget build(BuildContext context) {
     if(_loaded) {
-      if(_restaurants.isEmpty) {
+      if(_restaurants.length == 0) {
         _submitRestaurants();
       }
     }

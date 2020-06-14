@@ -11,7 +11,9 @@ class Network {
       type = "";
     }
     headers["Content-Type"] = 'application/json';
-    final response = await http.get(baseURL + type + convertToQueryString(queries));
+    String query = convertToQueryString(queries);
+    print(baseURL + type + query);
+    final response = await http.get(baseURL + type + query);
     printResponse("GET", response);
     return jsonDecode(response.body);
   }
