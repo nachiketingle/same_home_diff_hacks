@@ -187,6 +187,7 @@ router.put('/set-categories', async (req, res) => {
   let remaining = new Set(doc['members']);
   doc['category-finishers'].forEach(name => remaining.delete(name));
   pusher.triggerEvent(accessCode, 'onCategoryEnd', [...remaining]);
+  console.log("Remaining:", [...remaining])
   res.status(200).json([...remaining]);
 
   // if all done, notify onSwipeStart
