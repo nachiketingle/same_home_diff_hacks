@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 import '../Models/User.dart';
+import '../Networking/PusherWeb.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HostLobby extends StatefulWidget {
   _HostLobbyState createState() => _HostLobbyState();
@@ -9,6 +13,9 @@ class HostLobby extends StatefulWidget {
 class _HostLobbyState extends State<HostLobby> {
   User user;
   List<String> _allUsers = List<String>();
+  PusherWeb pusher;
+  bool _loaded = false;
+  String _eventName = 'onGuestJoin';
 
   void startVote() {
     if(!isValid()) {
@@ -24,24 +31,45 @@ class _HostLobbyState extends State<HostLobby> {
     return _allUsers.length > 1;
   }
 
-  void getNames() {
-    // Ping server to get list of names
-    _allUsers.clear();
-    _allUsers.add(user.name);
-    _allUsers.add("Kev");
-    _allUsers.add("arOn");
-    _allUsers.add("Casp");
+  void listenStream() async {
+    pusher.eventStream.listen((event) {
+      print("Event: " + event);
+      Map<String, dynamic> json = jsonDecode(event);
+      if(json['event'] == _eventName) {
+        setState(() {
+          _allUsers.clear();
+          List<dynamic> _temp  = json['message'];
+          for(String name in _temp) {
+            _allUsers.add(name);
+          }
+        });
+      }
+    });
   }
 
   void initState() {
     super.initState();
+    pusher = PusherWeb();
+
+  }
+
+  void dispose() {
+    pusher.unbindEvent(_eventName);
+    pusher.unSubscribePusher(user.accessCode);
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
 
-    user = ModalRoute.of(context).settings.arguments;
+    if(!_loaded) {
+      user = ModalRoute.of(context).settings.arguments;
+      _loaded = true;
+      pusher.firePusher(user.accessCode, _eventName);
+      listenStream();
+      _allUsers.add(user.name);
+    }
     print(user.toString());
-    getNames();
+
 
     return Scaffold(
       appBar: AppBar(

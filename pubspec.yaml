@@ -26,6 +26,7 @@ dependencies:
   location: 3.0.2
   shared_preferences: ^0.5.3+4
   location_permissions: ^2.0.3
+  flutter_pusher: 1.0.2
 
 dev_dependencies:
   flutter_test:

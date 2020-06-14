@@ -7,5 +7,6 @@ class User {
   String groupName = "";
 
   User(this.isHost, this.name, this.accessCode, this.groupName);
+  User.min(this.name);
 
 }

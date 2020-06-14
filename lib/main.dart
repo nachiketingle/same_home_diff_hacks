@@ -10,6 +10,7 @@ import 'Helpers/AppThemes.dart';
 import 'Home.dart';
 import 'Host/SettingsPage.dart';
 import 'Host/HostLobby.dart';
+import 'package:flutter_pusher/pusher.dart';
 
 //void main() => runApp(MyApp());
 Future main() async {
