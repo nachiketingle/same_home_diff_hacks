@@ -207,7 +207,7 @@ router.put('/set-categories', async (req, res) => {
       },
       method: 'get'
     }
-    let url = YELP_BUSINESSES_URL + 'search?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString() + '&limit=5';
+    let url = YELP_BUSINESSES_URL + 'search?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString();
     fetch(url, params)
       .then(data => data.json())
       .then(json => {
