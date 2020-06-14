@@ -25,7 +25,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
       _ids.add(rest.id);
     }
 
-    RestaurantServices.submitSwipes(_user.accessCode, _ids).then((value) {
+    RestaurantServices.submitSwipes(_user.accessCode, _user.name, _ids).then((value) {
       List<String> remaining = List();
       for(String name in value) {
         remaining.add(name);
