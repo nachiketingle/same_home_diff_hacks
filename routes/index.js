@@ -289,7 +289,7 @@ router.put('/set-categories', async (req, res) => {
   }
 });
 
-router.get('/restaurants', (req, res) => {
+router.get('/restaurants', async (req, res) => {
   let accessCode = req.query['accessCode'];
   // finds group
   const doc = await mongo.findDocument(accessCode, 'restaurants');
