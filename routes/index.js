@@ -52,6 +52,10 @@ router.get("/kevin", (req, res) => {
   res.send("<script>function secret() {document.getElementById(\"audio\").play();}</script><audio id=\"audio\" src=\"secret.mp3\"></audio><p style=\"text-align:center;width:100%;font-size:75vh;\" onclick=\"secret()\">🤡</p>");
 })
 
+router.get("/egg", (req, res) => {
+  res.send("<style>.shake {animation: .2s shake infinite;animation-delay: 21.5s;}@keyframes shake {0% { transform: skewX(-10deg); }50% { transform: skewX(10deg); }100% { transform: skewX(-10deg); }}</style><script>function egg() {document.getElementById(\"audio\").play();document.getElementById(\"egg\").classList.add(\"shake\");}</script><audio id=\"audio\" src=\"yijianmei.mp3\"></audio><p id=\"egg\"style=\"text-align:center;width:100%;font-size:75vh;\" onclick=\"egg()\">🥚</p>");
+})
+
 router.get("/kasper", (req, res) => {
   let r = "";
   for (let i = 0; i < 1229; i++) {
@@ -203,7 +207,7 @@ router.put('/set-categories', async (req, res) => {
       },
       method: 'get'
     }
-    let url = YELP_BUSINESSES_URL + 'search?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString();
+    let url = YELP_BUSINESSES_URL + 'search?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString() + '&limit=5';
     fetch(url, params)
       .then(data => data.json())
       .then(json => {
