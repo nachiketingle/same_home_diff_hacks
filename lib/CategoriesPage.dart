@@ -128,11 +128,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         title: Text(cat),
                         onTap: () {
                           setState(() {
-                            if(_selectedCategories[cat] != null) {
-                              _selectedCategories.remove(cat);
+                            if(_selectedCategories[key] != null) {
+                              _selectedCategories.remove(key);
                             }
                             else{
-                              _selectedCategories[cat] = _displayCategories[cat];
+                              _selectedCategories[key] = _displayCategories[key];
                             }
                           });
                         },
