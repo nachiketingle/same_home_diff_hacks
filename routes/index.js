@@ -71,47 +71,47 @@ router.delete('/mongo', (req, res) => {
 
 router.get('/get-restaurants', (req, res) => {
   let list = [{
-      'name': 'In-N-Out',
-      'id': 'WavvLdfdP6g8aZTtbBQHTw',
-      'rating': 4.5,
-      'review_count': 5296,
-      'price': '$',
-      'latitude': 37.7670169511878,
-      'longitude': -122.42184275,
-      'photos': [
-        'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-        'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-        'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
-      ]
-    },
-    {
-      'name': 'mcdonalds',
-      'id': 'WavvLdfdP6g8aZTtbBQHTw',
-      'rating': 1.2,
-      'review_count': 5453356,
-      'price': '$',
-      'latitude': 31.7670169511878,
-      'longitude': -121.42184275,
-      'photos': [
-        'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-        'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-        'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
-      ]
-    },
-    {
-      'name': 'icecream',
-      'id': 'WavvLdfdP6g8aZTtbBQHTw',
-      'rating': 5.3,
-      'review_count': 556,
-      'price': '$',
-      'latitude': 31.7670169511878,
-      'longitude': -121.42184275,
-      'photos': [
-        'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-        'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-        'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
-      ]
-    }
+    'name': 'In-N-Out',
+    'id': 'WavvLdfdP6g8aZTtbBQHTw',
+    'rating': 4.5,
+    'review_count': 5296,
+    'price': '$',
+    'latitude': 37.7670169511878,
+    'longitude': -122.42184275,
+    'photos': [
+      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
+      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
+      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
+    ]
+  },
+  {
+    'name': 'mcdonalds',
+    'id': 'WavvLdfdP6g8aZTtbBQHTw',
+    'rating': 1.2,
+    'review_count': 5453356,
+    'price': '$',
+    'latitude': 31.7670169511878,
+    'longitude': -121.42184275,
+    'photos': [
+      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
+      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
+      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
+    ]
+  },
+  {
+    'name': 'icecream',
+    'id': 'WavvLdfdP6g8aZTtbBQHTw',
+    'rating': 5.3,
+    'review_count': 556,
+    'price': '$',
+    'latitude': 31.7670169511878,
+    'longitude': -121.42184275,
+    'photos': [
+      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
+      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
+      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
+    ]
+  }
   ];
   res.json(list);
 })
@@ -258,29 +258,51 @@ router.put('/set-categories', async (req, res) => {
         let restaurantsFinished = 0;
         // Get business details for yelp
         ids.forEach((id) => {
-            let params = {
-              headers: {
-                'Authorization': 'Bearer ' + dispatcher.getApiKey(),
-                'content-type': 'application/json'
-              },
-              method: 'get'
-            }
-            // Get businesses detials (except reviews)
-            url = YELP_BUSINESSES_URL + id;
-            fetch(url, params)
-              .then(dataDetails => dataDetails.json())
-              .then(jsonDetails => {
-                getRestaurantDetails(jsonDetails, restaurants, url, () => {
-                  if(++restaurantsFinished == ids.length) {
-                    console.log(restaurants);
-                    pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
-                  }
-                });
+          let params = {
+            headers: {
+              'Authorization': 'Bearer ' + dispatcher.getApiKey(),
+              'content-type': 'application/json'
+            },
+            method: 'get'
+          }
+          // Get businesses detials (except reviews)
+          url = YELP_BUSINESSES_URL + id;
+          fetch(url, params)
+            .then(dataDetails => dataDetails.json())
+            .then(jsonDetails => {
+              getRestaurantDetails(jsonDetails, restaurants, url, () => {
+                if (++restaurantsFinished == ids.length) {
+                  console.log(restaurants);
+                  let restaurantDoc = {
+                    'accessCode': accessCode,
+                    'restaurants': restaurants
+                  };
+                  // update restaurants
+                  mongo.addDocument(restaurantDoc, 'restaurants');
+                  // finds group
+                  pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
+                }
               });
-          });
+            });
+        });
       });
-    }
+  }
 });
+
+router.get('/restaurants', (req, res) => {
+  let accessCode = req.query['accessCode'];
+  // finds group
+  const doc = await mongo.findDocument(accessCode, 'restaurants');
+
+  if (doc) {
+    res.json(doc['restaurants']);
+  }
+  else {
+    res.status(400).json({
+      'error': 'Access Code is invalid!'
+    })
+  }
+})
 
 // User finishes swiping
 router.put('/submit-swipes', async (req, res) => {
@@ -328,7 +350,7 @@ router.put('/submit-swipes', async (req, res) => {
   }
 });
 
-function getRestaurantDetails(json, restaurants, url, done){
+function getRestaurantDetails(json, restaurants, url, done) {
   let restaurant = {};
   restaurant['name'] = json['name'];
   restaurant['id'] = json['id'];
@@ -359,7 +381,7 @@ function getRestaurantDetails(json, restaurants, url, done){
     });
 }
 
-function getReview(json, restaurant, restaurants){
+function getReview(json, restaurant, restaurants) {
   json['reviews'].forEach((review) => {
     let r = {};
     r['rating'] = review['rating'];
