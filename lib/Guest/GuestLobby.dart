@@ -32,7 +32,7 @@ class _GuestLobbyState extends State<GuestLobby> {
   }
 
   void listenStream() async {
-    pusher.firePusher(user.accessCode, _eventName);
+    await pusher.firePusher(user.accessCode, _eventName);
     pusher.bindEvent('onCategoryStart');
     pusher.eventStream.listen((event) {
       print("Event: " + event);
