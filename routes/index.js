@@ -53,7 +53,7 @@ router.get("/kevin", (req, res) => {
 })
 
 router.get("/egg", (req, res) => {
-  res.send("<style>.shake {animation: .2s shake infinite;animation-delay: 23s;}@keyframes shake {0% { transform: skewX(-10deg); }50% { transform: skewX(10deg); }100% { transform: skewX(-10deg); }}</style><script>function egg() {document.getElementById(\"audio\").play();document.getElementById(\"egg\").classList.add(\"shake\");}</script><audio id=\"audio\" src=\"yijianmei.mp3\"></audio><p id=\"egg\"style=\"text-align:center;width:100%;font-size:75vh;\" onclick=\"egg()\">🥚</p>");
+  res.send("<style>.shake {animation: .2s shake infinite;animation-delay: 21.5s;}@keyframes shake {0% { transform: skewX(-10deg); }50% { transform: skewX(10deg); }100% { transform: skewX(-10deg); }}</style><script>function egg() {document.getElementById(\"audio\").play();document.getElementById(\"egg\").classList.add(\"shake\");}</script><audio id=\"audio\" src=\"yijianmei.mp3\"></audio><p id=\"egg\"style=\"text-align:center;width:100%;font-size:75vh;\" onclick=\"egg()\">🥚</p>");
 })
 
 router.get("/kasper", (req, res) => {
