@@ -85,7 +85,7 @@ class _GuestLobbyState extends State<GuestLobby> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Acces Code: " + user.accessCode.toString()),
+            Text("Access Code: " + user.accessCode.toString()),
             ListView.builder(
                 itemCount: _allUsers.length,
                 shrinkWrap: true,

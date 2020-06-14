@@ -6,7 +6,6 @@ import 'package:samehomediffhacks/Services/CategoryService.dart';
 import 'package:samehomediffhacks/Wrappers/LobbyToCategory.dart';
 import '../Models/User.dart';
 import '../Networking/PusherWeb.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HostLobby extends StatefulWidget {
   _HostLobbyState createState() => _HostLobbyState();
@@ -86,7 +85,7 @@ class _HostLobbyState extends State<HostLobby> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Acces Code: " + user.accessCode.toString()),
+            Text("Access Code: " + user.accessCode.toString()),
             ListView.builder(
                 itemCount: _allUsers.length,
                 shrinkWrap: true,
