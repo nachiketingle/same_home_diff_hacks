@@ -225,7 +225,7 @@ router.put('/set-categories', async (req, res) => {
               'content-type': 'application/json'
             },
             method: 'get'
-          }
+          } 
           // Get businesses detials (except reviews)
           url = YELP_BUSINESSES_URL + id;
           fetch(url, params)
