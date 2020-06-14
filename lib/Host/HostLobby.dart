@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Helpers/AppThemes.dart';
+import 'package:samehomediffhacks/Services/CategoryService.dart';
+import 'package:samehomediffhacks/Wrappers/LobbyToCategory.dart';
 import '../Models/User.dart';
 import '../Networking/PusherWeb.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,15 +17,21 @@ class _HostLobbyState extends State<HostLobby> {
   List<String> _allUsers = List<String>();
   PusherWeb pusher;
   bool _loaded = false;
+  bool _pinging = false;
   String _eventName = 'onGuestJoin';
 
-  void startVote() {
-    if(!isValid()) {
+  void startVote() async {
+    if(!isValid() && _pinging) {
       return;
     }
+    _pinging = true;
 
-    // Tell server to start vote
-    Navigator.of(context).pushNamed("/categories");
+    CategoryService.startCategory(user.accessCode).then((value) {
+      LobbyToCategory(user, value);
+      // Tell server to start vote
+      Navigator.of(context).pushNamed("/categories");
+    });
+
   }
 
   bool isValid() {

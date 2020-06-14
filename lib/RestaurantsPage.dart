@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Models/Restaurant.dart';
 import 'package:samehomediffhacks/Services/RestaurantServices.dart';
+import 'package:samehomediffhacks/Wrappers/FromWaiting.dart';
+import 'package:samehomediffhacks/Wrappers/ToWaiting.dart';
+import 'package:samehomediffhacks/Models/User.dart';
 import 'Helpers/AppThemes.dart';
 
 class RestaurantsPage extends StatefulWidget {
@@ -11,13 +14,35 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
   List<Restaurant> _restaurants = List<Restaurant>();
   List<Restaurant> _leftList = List<Restaurant>();
   List<Restaurant> _rightList = List<Restaurant>();
+  bool _loaded = false;
+  User _user;
+
+  void _submitRestaurants() {
+    List<String> _ids = List();
+    for(Restaurant rest in _rightList) {
+      _ids.add(rest.id);
+    }
+
+    RestaurantServices.submitSwipes(_user.accessCode, _ids).then((value) {
+      List<String> remaining = List();
+      for(String name in value) {
+        remaining.add(name);
+      }
+      ToWaiting wrapper = ToWaiting(_user, 'onSwipeEnd', 'onResultFound', '/results', remaining);
+      Navigator.pushNamed(context, "/waiting", arguments: wrapper);
+    });
+
+  }
 
   void _showMoreInfo(Restaurant restaurant) {
     Navigator.pushNamed(context, "/restaurantInfo", arguments: restaurant);
   }
 
-  void _addRestaurants() async {
-    _restaurants = await RestaurantServices.getRestaurants();
+  void _addRestaurants(List<dynamic> body) {
+    for(Map<String, dynamic> json in body) {
+      _restaurants.add(Restaurant.fromJSON(json));
+    }
+
     setState(() {
 
     });
@@ -72,10 +97,24 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
 
   void initState() {
     super.initState();
-    _addRestaurants();
   }
 
   Widget build(BuildContext context) {
+    if(!_loaded) {
+      _loaded = true;
+      FromWaiting wrapper = ModalRoute.of(context).settings.arguments;
+      List<dynamic> json = wrapper.message;
+      _addRestaurants(json);
+      _user = wrapper.user;
+    }
+
+    if(_loaded) {
+      if(_restaurants.isEmpty) {
+        _submitRestaurants();
+
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Restaurants Page"),

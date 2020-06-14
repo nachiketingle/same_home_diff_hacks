@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:samehomediffhacks/Services/CategoryService.dart';
+import 'package:samehomediffhacks/Wrappers/LobbyToCategory.dart';
+import 'package:samehomediffhacks/Wrappers/ToWaiting.dart';
 import 'Helpers/AppThemes.dart';
+import 'Models/User.dart';
 
 class CategoriesPage extends StatefulWidget {
   _CategoriesPageState createState() => _CategoriesPageState();
@@ -8,28 +12,26 @@ class CategoriesPage extends StatefulWidget {
 
 class _CategoriesPageState extends State<CategoriesPage> {
 
-  List<String> _allCategories = List<String>();
-  List<String> _displayCategories = List<String>();
-  List<String> _selectedCategories = List<String>();
-
+  Map<String, String> _allCategories = Map();
+  Map<String, String> _displayCategories = Map();
+  Map<String, String> _selectedCategories = Map();
   TextEditingController _searchController = TextEditingController();
-
+  User _user;
+  bool _loaded = false;
   bool isSearching = false;
 
   Widget searchIcon = Icon(Icons.search);
 
   void _submitCategories() {
-    Navigator.pushNamed(context, "/restaurants");
-  }
+    CategoryService.setCategories(_user.accessCode, _user.name, _selectedCategories.keys).then((value) {
+      List<String> remaining = List();
+      for(String name in value) {
+        remaining.add(name);
+      }
+      ToWaiting wrapper = ToWaiting(_user, 'onCategoryEnd', 'onSwipeStart', '/restaurants', remaining);
+      Navigator.pushNamed(context, "/waiting", arguments: wrapper);
+    });
 
-  void _getCategories() {
-    // Ping server for all the categories
-    _allCategories.add("Thai");
-    _allCategories.add("Chinese");
-    _allCategories.add("Indian");
-    _allCategories.add("Pizza");
-    _allCategories.add("Ice Cream");
-    _displayCategories.addAll(_allCategories);
   }
 
   void _updateList(){
@@ -44,11 +46,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
       return;
     }
 
-    for (String cat in _allCategories) {
+    _allCategories.forEach((key, cat) {
       if(cat.toLowerCase().contains(val.toLowerCase())) {
-        _displayCategories.add(cat);
+        _displayCategories[key] = cat;
       }
-    }
+    });
 
     searchIcon = IconButton(
       icon: Icon(Icons.clear),
@@ -66,10 +68,19 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   void initState() {
     super.initState();
-    _getCategories();
+
   }
 
   Widget build(BuildContext context) {
+
+    if(!_loaded) {
+      LobbyToCategory wrapper = ModalRoute.of(context).settings.arguments;
+      _allCategories = wrapper.categories;
+      _user = wrapper.user;
+      _displayCategories.addAll(_allCategories);
+      _loaded = true;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Select Your Categories"),
@@ -106,19 +117,19 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   shrinkWrap: true,
                   itemCount: _displayCategories.length,
                   itemBuilder: (context, index) {
-                    String cat = _displayCategories[index];
+                    String cat = _displayCategories.keys.elementAt(index);
                     return ListTileTheme(
                       selectedColor: Colors.purple,
                       child: ListTile(
-                        selected: _selectedCategories.contains(cat),
+                        selected: _selectedCategories[cat] != null,
                         title: Text(cat),
                         onTap: () {
                           setState(() {
-                            if(_selectedCategories.contains(cat)) {
+                            if(_selectedCategories[cat] != null) {
                               _selectedCategories.remove(cat);
                             }
                             else{
-                              _selectedCategories.add(cat);
+                              _selectedCategories[cat] = _displayCategories[cat];
                             }
                           });
                         },

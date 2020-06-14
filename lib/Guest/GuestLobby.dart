@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:samehomediffhacks/Wrappers/LobbyToCategory.dart';
 import '../Models/User.dart';
 import '../Networking/PusherWeb.dart';
 import 'package:samehomediffhacks/Helpers/AppThemes.dart';
@@ -43,6 +44,10 @@ class _GuestLobbyState extends State<GuestLobby> {
             _allUsers.add(name);
           }
         });
+      }
+      else if(json['event'] == 'onCategoryStart') {
+        Map<String, dynamic> value = json['message'];
+        Navigator.pushNamedAndRemoveUntil(context, '/categories', (_) => false, arguments: LobbyToCategory(user, value));
       }
     });
   }

@@ -10,7 +10,7 @@ import 'Helpers/AppThemes.dart';
 import 'Home.dart';
 import 'Host/SettingsPage.dart';
 import 'Host/HostLobby.dart';
-import 'package:flutter_pusher/pusher.dart';
+import 'package:samehomediffhacks/WaitingRoom.dart';
 
 //void main() => runApp(MyApp());
 Future main() async {
@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
         "/restaurants": (context) => RestaurantsPage(),
         "/restaurantInfo": (context) => RestaurantInfoPage(),
         "/results": (context) => ResultsPage(),
+        "/waiting": (context) => WaitingRoom(),
       },
       initialRoute: "/",
     );
