@@ -5,6 +5,7 @@ import '../Helpers/Constants.dart';
 
 class CategoryService {
   static Future<Map<String, dynamic>> startCategory(String accessCode) async {
+    print("Access Code: " + accessCode);
     Map<String, dynamic> body = Map();
     body['accessCode'] = accessCode;
     Map<String, dynamic> list = await Network.put(Constants.startCategories, body);
