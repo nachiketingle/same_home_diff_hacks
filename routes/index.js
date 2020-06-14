@@ -3,7 +3,10 @@ var router = express.Router();
 var mongo = require('../lib/mongo');
 const fetch = require('node-fetch');
 const pusher = require('../lib/pusher');
-const { v4: uuidv4 } = require('uuid');
+const dispatcher = require('../lib/dispatcher');
+const {
+  v4: uuidv4
+} = require('uuid');
 const YELP_BUSINESSES_URL = 'https://api.yelp.com/v3/businesses/';
 const ACCESS_LENGTH_CODE = 4;
 const METERS_PER_MILE = 1609.34;
@@ -39,19 +42,19 @@ router.get('/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81', (req, res) => {
 
 router.get('/happy-birthday-tzuyu', (req, res) => {
   res.send('<img src=\"https://kpopping.com/uploads/documents/Tzuyu1419.jpeg\" height = \"500\"> <img src=\"https://www.knetizen.com/wp-content/uploads/2019/05/TWICE-Tzuyu.jpg\" height = \"500\">' +
-  '<img src=\"https://i.redd.it/nuekhv9mt6j31.jpg\" height = \"500\"> <img src=\"https://pm1.narvii.com/6348/6640f21db5291e524af46988cbff7252807a5e3c_hq.jpg\" height = \"500\">' +
-'<img src=\"https://papers.co/wallpaper/papers.co-hq84-kpop-twice-tzuyu-girl-night-camping-40-wallpaper.jpg\" height = \"500\"> <img src=\"https://3.bp.blogspot.com/-FeWL5jRoOmU/XEJfqbhXePI/AAAAAAAAC9s/7hw_kqXeeQsiItY7dNTMaeihSB0ilmZfQCEwYBhgL/s1600/Tzuyu%2B%2528Twice%2529%2B-%2BChou%2BTzu-Yu%2BLatest%2Bphotos%2B-%2Bwww.profileaz.com%2B%252812%2529.jpg\" height = \"500\">' +
-'<img src=\"https://i.redd.it/7pn8bn1dss911.jpg\" height = \"500\"> <img src=\"https://kpopping.com/uploads/documents/TenderHeart0614-1188135559274713088-EH0a83SUwAArxj1.jpeg\" height = \"500\">' +
-'<img src=\"https://i.pinimg.com/originals/15/6a/0f/156a0f0c74564286a259eb30ef56d286.jpg\" height = \"500\"> <img src=\"https://pbs.twimg.com/media/DitiWC7U0AAtUkv.jpg\" height = \"500\">')
+    '<img src=\"https://i.redd.it/nuekhv9mt6j31.jpg\" height = \"500\"> <img src=\"https://pm1.narvii.com/6348/6640f21db5291e524af46988cbff7252807a5e3c_hq.jpg\" height = \"500\">' +
+    '<img src=\"https://papers.co/wallpaper/papers.co-hq84-kpop-twice-tzuyu-girl-night-camping-40-wallpaper.jpg\" height = \"500\"> <img src=\"https://3.bp.blogspot.com/-FeWL5jRoOmU/XEJfqbhXePI/AAAAAAAAC9s/7hw_kqXeeQsiItY7dNTMaeihSB0ilmZfQCEwYBhgL/s1600/Tzuyu%2B%2528Twice%2529%2B-%2BChou%2BTzu-Yu%2BLatest%2Bphotos%2B-%2Bwww.profileaz.com%2B%252812%2529.jpg\" height = \"500\">' +
+    '<img src=\"https://i.redd.it/7pn8bn1dss911.jpg\" height = \"500\"> <img src=\"https://kpopping.com/uploads/documents/TenderHeart0614-1188135559274713088-EH0a83SUwAArxj1.jpeg\" height = \"500\">' +
+    '<img src=\"https://i.pinimg.com/originals/15/6a/0f/156a0f0c74564286a259eb30ef56d286.jpg\" height = \"500\"> <img src=\"https://pbs.twimg.com/media/DitiWC7U0AAtUkv.jpg\" height = \"500\">')
 })
 
-router.get("/kevin", (req,res) => {
+router.get("/kevin", (req, res) => {
   res.send("<script>function secret() {document.getElementById(\"audio\").play();}</script><audio id=\"audio\" src=\"secret.mp3\"></audio><p style=\"text-align:center;width:100%;font-size:75vh;\" onclick=\"secret()\">🤡</p>");
 })
 
-router.get("/kasper", (req,res) => {
+router.get("/kasper", (req, res) => {
   let r = "";
-  for(let i = 0; i < 1229; i++) {
+  for (let i = 0; i < 1229; i++) {
     r += "👻"
   }
   res.send(r);
@@ -68,38 +71,47 @@ router.delete('/mongo', (req, res) => {
 
 router.get('/get-restaurants', (req, res) => {
   let list = [{
-    'name': 'In-N-Out',
-    'id': 'WavvLdfdP6g8aZTtbBQHTw',
-    'rating': 4.5,
-    'review_count': 5296,
-    'price': '$',
-    'latitude': 37.7670169511878, 'longitude': -122.42184275, 'photos': [
-      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg']
-  },
-  {
-    'name': 'mcdonalds',
-    'id': 'WavvLdfdP6g8aZTtbBQHTw',
-    'rating': 1.2,
-    'review_count': 5453356,
-    'price': '$',
-    'latitude': 31.7670169511878, 'longitude': -121.42184275, 'photos': [
-      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg']
-  },
-  {
-    'name': 'icecream',
-    'id': 'WavvLdfdP6g8aZTtbBQHTw',
-    'rating': 5.3,
-    'review_count': 556,
-    'price': '$',
-    'latitude': 31.7670169511878, 'longitude': -121.42184275, 'photos': [
-      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg']
-  }
+      'name': 'In-N-Out',
+      'id': 'WavvLdfdP6g8aZTtbBQHTw',
+      'rating': 4.5,
+      'review_count': 5296,
+      'price': '$',
+      'latitude': 37.7670169511878,
+      'longitude': -122.42184275,
+      'photos': [
+        'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
+        'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
+        'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
+      ]
+    },
+    {
+      'name': 'mcdonalds',
+      'id': 'WavvLdfdP6g8aZTtbBQHTw',
+      'rating': 1.2,
+      'review_count': 5453356,
+      'price': '$',
+      'latitude': 31.7670169511878,
+      'longitude': -121.42184275,
+      'photos': [
+        'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
+        'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
+        'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
+      ]
+    },
+    {
+      'name': 'icecream',
+      'id': 'WavvLdfdP6g8aZTtbBQHTw',
+      'rating': 5.3,
+      'review_count': 556,
+      'price': '$',
+      'latitude': 31.7670169511878,
+      'longitude': -121.42184275,
+      'photos': [
+        'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
+        'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
+        'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
+      ]
+    }
   ];
   res.json(list);
 })
@@ -145,7 +157,9 @@ router.put('/create-group', async (req, res) => {
     group['accessCode'] = accessCode;
   }
   // respond with the access code
-  res.json({accessCode:accessCode});
+  res.json({
+    accessCode: accessCode
+  });
 });
 
 // Join a group
@@ -166,15 +180,22 @@ router.put('/join-group', async (req, res) => {
       mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
       // Send pusher triggerEvent
       pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
-      res.status(200).json({'message':'Success', 'groupName':doc['groupName'], 'members':doc['members']});
-    }
-    else {
-      res.status(409).json({'error':'Name already exists!'});
+      res.status(200).json({
+        'message': 'Success',
+        'groupName': doc['groupName'],
+        'members': doc['members']
+      });
+    } else {
+      res.status(409).json({
+        'error': 'Name already exists!'
+      });
     }
   }
   // if group does not exist
   else {
-    res.status(400).json({'error':'Access Code is invalid!'});
+    res.status(400).json({
+      'error': 'Access Code is invalid!'
+    });
   }
 });
 
@@ -219,60 +240,42 @@ router.put('/set-categories', async (req, res) => {
     // Sending Yelp API request on /businesses/search endpoint
     const meters = Math.min(Math.floor(doc['maxDistance'] * METERS_PER_MILE), 4000);
     let params = {
-      headers:{'Authorization': 'Bearer ' + process.env.YELP_API_DETAIL, 'content-type':'application/json'},
-      method:  'get'
+      headers: {
+        'Authorization': 'Bearer ' + dispatcher.getApiKey(),
+        'content-type': 'application/json'
+      },
+      method: 'get'
     }
     let url = YELP_BUSINESSES_URL + 'search?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString();
-    console.log(url);
-    let data = await fetch(url, params);
-    let json = await data.json();
-    let ids = [];
-    // append all business ids to ids array
-    json['businesses'].forEach(element => ids.push(element['id']));
-    console.log(ids);
+    fetch(url, params)
+      .then(data => data.json())
+      .then(json => {
+        let ids = [];
+        // append all business ids to ids array
+        json['businesses'].forEach(element => ids.push(element['id']));
+        console.log(ids);
 
-    // Get business details for yelp
-    for(let i = 0; i < ids.length; i++) {
-      // Get businesses detials (except reviews)
-      let id = ids[i];
-      url = YELP_BUSINESSES_URL + id;
-      data = await fetch(url, params);
-      json = await data.json();
-      console.log(json);
-
-      let restaurant = {};
-      restaurant['name'] = json['name'];
-      restaurant['id'] = json['id'];
-      restaurant['rating'] = json['rating'];
-      restaurant['review_count'] = json['review_count'];
-      restaurant['price'] = json['price'];
-      let coordinates = json['coordinates'];
-      restaurant['latitude'] = coordinates['latitude'];
-      restaurant['longitude'] = coordinates['longitude'];
-      restaurant['photos'] = json['photos'];
-      restaurant['reviews'] = [];
-
-      // Get business reviews
-      url = url + '/reviews';
-      params = {
-        headers:{'Authorization': 'Bearer ' + process.env.YELP_API_REVIEW, 'content-type':'application/json'},
-        method:  'get'
-      }
-      data = await fetch(url, params);
-      json = await data.json();
-      json['reviews'].forEach((review) => {
-        let r = {};
-        r['rating'] = review['rating'];
-        r['time'] = review['time_created'];
-        r['text'] = review['text'];
-        restaurant['reviews'].push(r);
+        // Get business details for yelp
+        ids.forEach((id) => {
+            let params = {
+              headers: {
+                'Authorization': 'Bearer ' + dispatcher.getApiKey(),
+                'content-type': 'application/json'
+              },
+              method: 'get'
+            }
+            // Get businesses detials (except reviews)
+            url = YELP_BUSINESSES_URL + id;
+            fetch(url, params)
+              .then(dataDetails => dataDetails.json())
+              .then(jsonDetails => {
+                getRestaurantDetails(jsonDetails, restaurants, url);
+              });
+          });
+          console.log(restaurants);
+          pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
       });
-
-      restaurants.push(restaurant);
     }
-    console.log(restaurants);
-    pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
-  }
 });
 
 // User finishes swiping
@@ -289,8 +292,7 @@ router.put('/submit-swipes', async (req, res) => {
   swipes.forEach(swipe => {
     if (doc['restaurant-pool'].hasOwnProperty(swipe)) {
       doc['restaurant-pool'][swipe] += 1;
-    }
-    else {
+    } else {
       doc['restaurant-pool'][swipe] = 1;
     }
   })
@@ -320,5 +322,46 @@ router.put('/submit-swipes', async (req, res) => {
   }
   res.sendStatus(200);
 });
+
+function getRestaurantDetails(json, restaurants, url){
+  let restaurant = {};
+  restaurant['name'] = json['name'];
+  restaurant['id'] = json['id'];
+  restaurant['rating'] = json['rating'];
+  restaurant['review_count'] = json['review_count'];
+  restaurant['price'] = json['price'];
+  let coordinates = json['coordinates'];
+  restaurant['latitude'] = coordinates['latitude'];
+  restaurant['longitude'] = coordinates['longitude'];
+  restaurant['photos'] = json['photos'];
+  restaurant['reviews'] = [];
+
+  let params = {
+    headers: {
+      'Authorization': 'Bearer ' + dispatcher.getApiKey(),
+      'content-type': 'application/json'
+    },
+    method: 'get'
+  }
+
+  // Get business reviews
+  url = url + '/reviews';
+  fetch(url, params)
+    .then(data2 => data2.json())
+    .then(json2 => {
+      getReview(json2, restaurant, restaurants);
+    });
+}
+
+function getReview(json, restaurant, restaurants){
+  json['reviews'].forEach((review) => {
+    let r = {};
+    r['rating'] = review['rating'];
+    r['time'] = review['time_created'];
+    r['text'] = review['text'];
+    restaurant['reviews'].push(r);
+  });
+  restaurants.push(restaurant);
+}
 
 module.exports = router;
