@@ -75,7 +75,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
     if(!_loaded) {
       LobbyToCategory wrapper = ModalRoute.of(context).settings.arguments;
-      _allCategories = wrapper.categories;
+      wrapper.categories.forEach((key, value) {
+        _allCategories[key] = value;
+      });
       _user = wrapper.user;
       _displayCategories.addAll(_allCategories);
       _loaded = true;
