@@ -6,12 +6,11 @@ import 'Wrappers/ToWaiting.dart';
 import 'Networking/PusherWeb.dart';
 import 'Models/User.dart';
 
-class WaitingRoom extends StatefulWidget{
+class WaitingRoom extends StatefulWidget {
   _WaitingRoomState createState() => _WaitingRoomState();
 }
 
 class _WaitingRoomState extends State<WaitingRoom> {
-
   PusherWeb pusher;
   String _eventName;
   String _futureEvent;
@@ -35,26 +34,26 @@ class _WaitingRoomState extends State<WaitingRoom> {
     pusher.eventStream.listen((event) {
       print("Event: " + event);
       Map<String, dynamic> json = jsonDecode(event);
-      if(json['event'] == _eventName) {
+      if (json['event'] == _eventName) {
         setState(() {
           _remaining.clear();
-          List<dynamic> _temp  = json['message'];
-          for(String name in _temp) {
+          List<dynamic> _temp = json['message'];
+          for (String name in _temp) {
             _remaining.add(name);
           }
           print(_remaining);
         });
-      }
-      else if(json['event'] == _futureEvent) {
+      } else if (json['event'] == _futureEvent) {
         print(_futureEvent + " was invoked User: " + _user.accessCode);
         FromWaiting wrapper = FromWaiting(_user, json['message']);
-        Navigator.pushNamedAndRemoveUntil(context, _nextRoute, (_) => false, arguments: wrapper);
+        Navigator.pushNamedAndRemoveUntil(context, _nextRoute, (_) => false,
+            arguments: wrapper);
       }
     });
   }
 
   Widget build(BuildContext context) {
-    if(!_loaded) {
+    if (!_loaded) {
       _loaded = true;
       ToWaiting wrapper = ModalRoute.of(context).settings.arguments;
       _eventName = wrapper.eventName;
@@ -76,8 +75,8 @@ class _WaitingRoomState extends State<WaitingRoom> {
       ),
       body: Center(
         child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: _remaining.length,
+            shrinkWrap: true,
+            itemCount: _remaining.length,
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(_remaining[index]),
