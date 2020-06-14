@@ -70,7 +70,11 @@ class _ResultsPageState extends State<ResultsPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Image.network(rest.imageURLs[0]),
+                        Image.network(
+                            rest.imageURLs[0],
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          height: MediaQuery.of(context).size.height * 0.175,
+                        ),
                         Text(rest.name, style: TextStyle(fontSize: 20),)
                       ],
                     )

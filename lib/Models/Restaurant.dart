@@ -33,28 +33,11 @@ class Restaurant {
       imageURLs.add(url);
     }
     reviews = List();
-    reviews.add(Review(
-      3,
-      "An Amzing Store",
-      "Sunday, 30:00"
-    ));
 
-    reviews.add(Review(
-        -1,
-        "Undefined store. Could not find it",
-        "Some random day"
-    ));
+    for(Map<String, dynamic> reviewJSON in json["reviews"]) {
+      reviews.add(Review.fromJSON(reviewJSON));
+    }
 
-    reviews.add(Review(
-        5,
-        "What was this! This was the worst store ever!"
-            "I cannot believe they sold me this abombination. I come in and ask"
-            "for some meat, and they send in a random objects. whjtjhjta"
-            "lkjalskdjflkajsd;lkjf;lakshdfg"
-            "ldfugiojieonrvodsfdihgoiahfdlkgnlsnkldhi8rhkjshgkj"
-            "shkfhsgkhkjhkjhsmmvkhiuzhijkjkjkdfgkjdjfghjkjkhjhsm,oiu",
-        "1/2/4/5"
-    ));
   }
 
 }
