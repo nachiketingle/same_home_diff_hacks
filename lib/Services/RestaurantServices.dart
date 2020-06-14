@@ -8,10 +8,11 @@ class RestaurantServices {
   static List<Restaurant> allRestaurants = List();
 
     static Future<List<Restaurant>> getRestaurants(String accessCode) async {
+
       Map<String, dynamic> body = Map();
       body['accessCode'] = accessCode;
 
-      List<dynamic> json = await Network.get('restaurants', null);
+      List<dynamic> json = await Network.get('restaurants', body);
 
       List<Restaurant> restaurants = List();
       for(Map<String, dynamic> val in json) {
