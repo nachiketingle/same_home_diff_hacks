@@ -52,6 +52,10 @@ router.get("/kevin", (req, res) => {
   res.send("<script>function secret() {document.getElementById(\"audio\").play();}</script><audio id=\"audio\" src=\"secret.mp3\"></audio><p style=\"text-align:center;width:100%;font-size:75vh;\" onclick=\"secret()\">🤡</p>");
 })
 
+router.get("/egg", (req, res) => {
+  res.send("<script>function egg() {document.getElementById(\"audio\").play();}</script><audio id=\"audio\" src=\"yijianmei.mp3\"></audio><p style=\"text-align:center;width:100%;font-size:75vh;\" onclick=\"egg()\">🥚</p>");
+})
+
 router.get("/kasper", (req, res) => {
   let r = "";
   for (let i = 0; i < 1229; i++) {
