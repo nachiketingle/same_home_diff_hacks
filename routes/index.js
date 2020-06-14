@@ -227,7 +227,7 @@ router.put('/set-categories', async (req, res) => {
           fetch(url, params)
             .then(dataDetails => dataDetails.json())
             .then(jsonDetails => {
-              getRestaurantDetails(jsonDetails, restaurants, url, () => {
+              getRestaurantDetails(jsonDetails, restaurants, url, async () => {
                 if (++restaurantsFinished == ids.length) {
                   console.log(restaurants);
                   let restaurantDoc = {
@@ -235,7 +235,7 @@ router.put('/set-categories', async (req, res) => {
                     'restaurants': restaurants
                   };
                   // update restaurants
-                  mongo.addDocument(restaurantDoc, 'restaurants');
+                  await mongo.addDocument(restaurantDoc, 'restaurants');
                   // finds group
                   pusher.triggerEvent(accessCode, 'onSwipeStart', "HEHEXD");
                 }
