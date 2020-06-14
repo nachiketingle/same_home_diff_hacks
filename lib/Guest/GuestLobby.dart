@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../Models/User.dart';
+import '../Networking/PusherWeb.dart';
 import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 
 class GuestLobby extends StatefulWidget {
@@ -10,6 +13,9 @@ class _GuestLobbyState extends State<GuestLobby> {
 
   User user;
   List<String> _allUsers = List<String>();
+  bool _loaded = false;
+  PusherWeb pusher;
+  String _eventName = "onGuestJoin";
 
   void startVote() {
     if(!isValid()) {
@@ -25,24 +31,39 @@ class _GuestLobbyState extends State<GuestLobby> {
     return _allUsers.length > 1;
   }
 
-  void getNames() {
-    // Ping server to get list of names
-    _allUsers.clear();
-    _allUsers.add(user.name);
-    _allUsers.add("Kev");
-    _allUsers.add("arOn");
-    _allUsers.add("Casp");
+  void listenStream() async {
+    pusher.eventStream.listen((event) {
+      print("Event: " + event);
+      Map<String, dynamic> json = jsonDecode(event);
+      if(json['event'] == _eventName) {
+        setState(() {
+          _allUsers.clear();
+          List<dynamic> _temp  = json['message'];
+          for(String name in _temp) {
+            _allUsers.add(name);
+          }
+        });
+      }
+    });
   }
 
   void initState() {
     super.initState();
+    pusher = PusherWeb();
+  }
+
+  void dispose() {
+    pusher.unbindEvent(_eventName);
+    pusher.unSubscribePusher(user.accessCode);
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
-
-    user = ModalRoute.of(context).settings.arguments;
-    print(user.toString());
-    getNames();
+    if(!_loaded) {
+      user = ModalRoute.of(context).settings.arguments;
+      print(user.toString());
+      listenStream();
+    }
 
     return Scaffold(
       appBar: AppBar(
