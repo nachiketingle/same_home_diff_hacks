@@ -42,6 +42,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
           for(String name in _temp) {
             _remaining.add(name);
           }
+          print(_remaining);
         });
       }
       else if(json['event'] == _futureEvent) {
@@ -59,6 +60,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
       _user = wrapper.user;
       _futureEvent = wrapper.futureEvent;
       _nextRoute = wrapper.nextRoute;
+      _remaining = wrapper.remaining;
       pusher.firePusher(_user.accessCode, _eventName).then((value) {
         pusher.bindEvent(_futureEvent);
       });
