@@ -259,6 +259,7 @@ function getRestaurantDetails(jsonDetails, restaurants, url, done) {
     method: 'get'
   }
 
+  console.log(url);
   // Get business reviews
   url = url + '/reviews';
   fetch(url, params)
