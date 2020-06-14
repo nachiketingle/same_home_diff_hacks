@@ -58,7 +58,11 @@ router.get("/kasper", (req,res) => {
 })
 
 router.get('/mongo', (req, res) => {
-  mongo.viewDB('group', (docs) => res.json(docs))
+  mongo.viewDB('group', (docs) => res.json(docs));
+})
+
+router.delete('/mongo', (req, res) => {
+  mongo.clearCollection('group');
 })
 
 router.get('/get-restaurants', (req, res) => {
