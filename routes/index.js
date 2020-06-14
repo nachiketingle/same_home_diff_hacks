@@ -255,6 +255,7 @@ router.put('/set-categories', async (req, res) => {
         json['businesses'].forEach(element => ids.push(element['id']));
         console.log(ids);
 
+        let restaurantsFinished = 0;
         // Get business details for yelp
         ids.forEach((id) => {
             let params = {
@@ -269,11 +270,14 @@ router.put('/set-categories', async (req, res) => {
             fetch(url, params)
               .then(dataDetails => dataDetails.json())
               .then(jsonDetails => {
-                getRestaurantDetails(jsonDetails, restaurants, url);
+                getRestaurantDetails(jsonDetails, restaurants, url, () => {
+                  if(++restaurantsFinished == ids.length) {
+                    console.log(restaurants);
+                    pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
+                  }
+                });
               });
           });
-          console.log(restaurants);
-          pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
       });
     }
 });
@@ -323,7 +327,7 @@ router.put('/submit-swipes', async (req, res) => {
   res.sendStatus(200);
 });
 
-function getRestaurantDetails(json, restaurants, url){
+function getRestaurantDetails(json, restaurants, url, done){
   let restaurant = {};
   restaurant['name'] = json['name'];
   restaurant['id'] = json['id'];
@@ -350,6 +354,7 @@ function getRestaurantDetails(json, restaurants, url){
     .then(data2 => data2.json())
     .then(json2 => {
       getReview(json2, restaurant, restaurants);
+      done();
     });
 }
 
