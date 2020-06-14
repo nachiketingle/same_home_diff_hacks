@@ -9,7 +9,7 @@ class RestaurantServices {
 
     static Future<List<Restaurant>> getRestaurants(String accessCode) async {
 
-      Map<String, dynamic> body = Map();
+      Map<String, String> body = Map();
       body['accessCode'] = accessCode;
 
       List<dynamic> json = await Network.get('restaurants', body);

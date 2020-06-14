@@ -23,7 +23,7 @@ class Restaurant {
     lat = json["latitude"];
     lng = json["longitude"];
     priceRange = json["price"];
-    rating = json["rating"];
+    rating = json["rating"] + 0.0;
     id = json["id"];
     // Do reviews
     reviewCount = json["review_count"];
