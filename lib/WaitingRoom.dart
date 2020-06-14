@@ -60,7 +60,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
       _futureEvent = wrapper.futureEvent;
       _nextRoute = wrapper.nextRoute;
       pusher.firePusher(_user.accessCode, _eventName);
-      pusher.firePusher(_user.accessCode, _futureEvent);
+      pusher.bindEvent(_futureEvent);
       listenStream();
     }
 

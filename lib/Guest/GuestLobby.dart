@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Wrappers/LobbyToCategory.dart';
 import '../Models/User.dart';
 import '../Networking/PusherWeb.dart';
-import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 
 class GuestLobby extends StatefulWidget {
   _GuestLobbyState createState() => _GuestLobbyState();
@@ -34,7 +33,7 @@ class _GuestLobbyState extends State<GuestLobby> {
 
   void listenStream() async {
     pusher.firePusher(user.accessCode, _eventName);
-    pusher.firePusher(user.accessCode, 'onCategoryStart');
+    pusher.bindEvent('onCategoryStart');
     pusher.eventStream.listen((event) {
       print("Event: " + event);
       Map<String, dynamic> json = jsonDecode(event);
