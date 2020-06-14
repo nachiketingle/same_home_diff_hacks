@@ -35,8 +35,11 @@ class _ResultsPageState extends State<ResultsPage> {
     if(!_loaded) {
       _loaded = true;
       FromWaiting wrapper = ModalRoute.of(context).settings.arguments;
-      _ids = wrapper.message;
+      for(String val in wrapper.message) {
+        _ids.add(val);
+      }
       _user = wrapper.user;
+      getRestaurants();
     }
 
 
@@ -54,29 +57,27 @@ class _ResultsPageState extends State<ResultsPage> {
       ),
 
       body: Center(
-        child: Expanded(
-          child: ListView.builder(
-            itemCount: _restaurants.length,
-              itemBuilder: (context, index) {
-                Restaurant rest = _restaurants[index];
-                return GestureDetector(
-                  onTap: () => _showMoreInfo(rest),
-                  child: Card(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Image.network(rest.imageURLs[0]),
-                          Text(rest.name, style: TextStyle(fontSize: 20),)
-                        ],
-                      )
-                    ),
+        child: ListView.builder(
+          itemCount: _restaurants.length,
+            itemBuilder: (context, index) {
+              Restaurant rest = _restaurants[index];
+              return GestureDetector(
+                onTap: () => _showMoreInfo(rest),
+                child: Card(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Image.network(rest.imageURLs[0]),
+                        Text(rest.name, style: TextStyle(fontSize: 20),)
+                      ],
+                    )
                   ),
-                );
-              }),
-        ),
+                ),
+              );
+            }),
       ),
     );
 
