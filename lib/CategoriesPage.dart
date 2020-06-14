@@ -124,7 +124,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     return ListTileTheme(
                       selectedColor: Colors.purple,
                       child: ListTile(
-                        selected: _selectedCategories[cat] != null,
+                        selected: _selectedCategories[key] != null,
                         title: Text(cat),
                         onTap: () {
                           setState(() {
