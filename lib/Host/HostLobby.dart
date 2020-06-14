@@ -27,9 +27,8 @@ class _HostLobbyState extends State<HostLobby> {
     _pinging = true;
 
     CategoryService.startCategory(user.accessCode).then((value) {
-      LobbyToCategory(user, value);
       // Tell server to start vote
-      Navigator.of(context).pushNamed("/categories");
+      Navigator.of(context).pushNamed("/categories", arguments: LobbyToCategory(user, value));
     });
 
   }

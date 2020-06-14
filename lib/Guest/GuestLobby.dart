@@ -33,6 +33,8 @@ class _GuestLobbyState extends State<GuestLobby> {
   }
 
   void listenStream() async {
+    pusher.firePusher(user.accessCode, _eventName);
+    pusher.firePusher(user.accessCode, 'onCategoryStart');
     pusher.eventStream.listen((event) {
       print("Event: " + event);
       Map<String, dynamic> json = jsonDecode(event);
