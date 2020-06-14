@@ -26,7 +26,7 @@ const CATEGORIES = {
 };
 
 router.get('/', (req, res) => {
-  res.sendFile("../public/index.html");
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
 })
 
 router.get('/%F0%9F%91%81%F0%9F%91%84%F0%9F%91%81', (req, res) => {
