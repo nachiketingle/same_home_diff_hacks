@@ -71,15 +71,14 @@ class _WaitingRoomState extends State<WaitingRoom> {
         title: Text("You are waiting for..."),
       ),
       body: Center(
-        child: Expanded(
-          child: ListView.builder(
-            itemCount: _remaining.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_remaining[index]),
-                );
-              }),
-        ),
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: _remaining.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(_remaining[index]),
+              );
+            }),
       ),
     );
   }
