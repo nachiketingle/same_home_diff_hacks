@@ -41,10 +41,9 @@ class _WaitingRoomState extends State<WaitingRoom> {
           for (String name in _temp) {
             _remaining.add(name);
           }
-          print(_remaining);
         });
-      } else if (json['event'] == _futureEvent) {
-        print(_futureEvent + " was invoked User: " + _user.accessCode);
+      }
+      else if(json['event'] == _futureEvent) {
         FromWaiting wrapper = FromWaiting(_user, json['message']);
         Navigator.pushNamedAndRemoveUntil(context, _nextRoute, (_) => false,
             arguments: wrapper);

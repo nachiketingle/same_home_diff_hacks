@@ -14,6 +14,7 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
   Restaurant _restaurant;
   CameraPosition camPos;
   Completer<GoogleMapController> _controller = Completer();
+  Map<MarkerId, Marker> _markers = {};
 
   /// Returns the list view for the images based on the URL in the restaurant
   Widget _imagesListView() {
@@ -75,12 +76,24 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
     );
   }
 
+  void initState() {
+    super.initState();
+
+  }
+
   Widget build(BuildContext context) {
 
     _restaurant = ModalRoute.of(context).settings.arguments;
     camPos = CameraPosition(
       target: LatLng(_restaurant.lat, _restaurant.lng),
-      zoom: 20
+      zoom: 15
+    );
+
+    _markers.clear();
+    MarkerId markerID = MarkerId(_restaurant.name);
+    _markers[markerID] = Marker(
+      markerId: markerID,
+      position: LatLng(_restaurant.lat, _restaurant.lng)
     );
 
     return Scaffold(
@@ -95,11 +108,11 @@ class _RestaurantInfoPageState extends State<RestaurantInfoPage> {
             _imagesListView(),
             Expanded(
               child: GoogleMap(
-                mapType: MapType.hybrid,
                 initialCameraPosition: camPos,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
+                markers: Set.of(_markers.values),
               ),
             ),
             Text("Rating: " + _restaurant.rating.toString() + "     Price Range: " + _restaurant.priceRange.toString()),

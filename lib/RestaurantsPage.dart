@@ -128,14 +128,6 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Restaurants Page"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.navigate_next),
-            onPressed: () {
-              Navigator.pushNamed(context, "/results");
-            },
-          )
-        ],
       ),
 
       body: Center(

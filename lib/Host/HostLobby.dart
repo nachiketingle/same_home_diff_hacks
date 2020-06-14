@@ -27,7 +27,7 @@ class _HostLobbyState extends State<HostLobby> {
 
     CategoryService.startCategory(user.accessCode).then((value) {
       // Tell server to start vote
-      Navigator.of(context).pushNamed("/categories", arguments: LobbyToCategory(user, value));
+      Navigator.of(context).pushNamedAndRemoveUntil("/categories", (_) => false, arguments: LobbyToCategory(user, value));
     });
 
   }
