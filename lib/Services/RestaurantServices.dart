@@ -22,12 +22,12 @@ class RestaurantServices {
       return restaurants;
     }
 
-    static Future<List<dynamic>> submitSwipes(String accessCode, List<String> ids) async {
-      Map<String, dynamic> body = Map();
+    static Future<List<dynamic>> submitSwipes(String accessCode, String name, List<String> ids) async {
+      Map<String, String> body = Map();
       body['accessCode'] = accessCode;
-      Map<String, dynamic> swipes = Map();
-      swipes['swipes'] = jsonEncode(ids);
-      body['swipes'] = swipes;
+      body['swipes'] = jsonEncode(ids);
+      body['name'] = name;
+
       List<dynamic> list = await Network.put(Constants.submitSwipes, body);
       print("Submitted Swipes: " + list.toString());
       return list;
