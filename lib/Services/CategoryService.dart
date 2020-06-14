@@ -15,6 +15,7 @@ class CategoryService {
   static Future<List<dynamic>> setCategories(String accessCode, String name, List<String> codes) async {
     Map<String, dynamic> body = Map();
     body['accessCode'] = accessCode;
+    body['name'] = name;
     body['categories'] = jsonEncode(codes);
     List<dynamic> list = await Network.put(Constants.setCategories, body);
     print("Set Category: " + list.toString());
