@@ -60,8 +60,14 @@ class _GuestLobbyState extends State<GuestLobby> {
 
   Widget build(BuildContext context) {
     if(!_loaded) {
-      user = ModalRoute.of(context).settings.arguments;
-      print(user.toString());
+      List<User> users = ModalRoute.of(context).settings.arguments;
+      _allUsers.clear();
+      for(User _user in users) {
+        _allUsers.add(_user.name);
+      }
+      user = users.last;
+      print(_allUsers);
+      _loaded = true;
       listenStream();
     }
 

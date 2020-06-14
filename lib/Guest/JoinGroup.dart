@@ -31,8 +31,13 @@ class _JoinGroupState extends State<JoinGroup> {
         ));
       }
       else {
-        User user = User(false, name, code, value['groupName']);
-        Navigator.pushNamed(context, "/guestLobby", arguments: user);
+        List<dynamic> _temp = value['members'];
+        List<User> allUsers = List();
+        for(String username in _temp) {
+          allUsers.add(User(false, username, code, value['groupName']));
+        }
+
+        Navigator.pushNamed(context, "/guestLobby", arguments: allUsers);
       }
     });
 
