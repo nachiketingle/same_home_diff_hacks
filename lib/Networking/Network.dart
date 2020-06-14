@@ -12,7 +12,6 @@ class Network {
     }
     headers["Content-Type"] = 'application/json';
     String query = convertToQueryString(queries);
-    print(baseURL + type + query);
     final response = await http.get(baseURL + type + query);
     printResponse("GET", response);
     return jsonDecode(response.body);
@@ -65,7 +64,7 @@ class Network {
       }
       count++;
     });
-    print("Final Query: " + finalQuery);
+
     return finalQuery;
   }
 
