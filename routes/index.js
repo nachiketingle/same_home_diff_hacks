@@ -311,6 +311,8 @@ router.put('/submit-swipes', async (req, res) => {
   let remaining = new Set(doc['members']);
   doc['swipe-finishers'].forEach(name => remaining.delete(name));
   pusher.triggerEvent(accessCode, 'onSwipeEnd', [...remaining]);
+  res.status(200).json([...remaining]);
+
   // if all done, notify onResultFound
   console.log(remaining.size);
   if (remaining.size == 0) {
@@ -324,7 +326,6 @@ router.put('/submit-swipes', async (req, res) => {
     console.log(topRestaurants);
     pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
   }
-  res.sendStatus(200);
 });
 
 function getRestaurantDetails(json, restaurants, url, done){
