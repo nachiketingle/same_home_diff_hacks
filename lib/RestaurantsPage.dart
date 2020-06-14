@@ -102,26 +102,28 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
   }
 
   Widget build(BuildContext context) {
+    if(_loaded) {
+      if(_restaurants.isEmpty) {
+        _submitRestaurants();
+      }
+    }
+
     if(!_loaded) {
-      _loaded = true;
+
       FromWaiting wrapper = ModalRoute.of(context).settings.arguments;
       _user = wrapper.user;
       //List<dynamic> json = jsonDecode(wrapper.message);
       RestaurantServices.getRestaurants(_user.accessCode).then((value) {
         setState(() {
           _restaurants = value;
+          _loaded = true;
         });
       });
       //_addRestaurants(json);
 
     }
 
-    if(_loaded) {
-      if(_restaurants.isEmpty) {
-        _submitRestaurants();
 
-      }
-    }
 
     return Scaffold(
       appBar: AppBar(
