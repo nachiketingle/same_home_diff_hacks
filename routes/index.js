@@ -227,7 +227,7 @@ router.put('/set-categories', async (req, res) => {
           fetch(url, params)
             .then(dataDetails => dataDetails.json())
             .then(jsonDetails => {
-              getRestaurantDetails(jsonDetails, restaurants, url, async () => {
+              getRestaurantDetails(jsonDetails, restaurants, YELP_BUSINESSES_URL + jsonDetails["id"], async () => {
                 if (++restaurantsFinished == ids.length) {
                   console.log(restaurants);
                   let restaurantDoc = {
@@ -245,6 +245,47 @@ router.put('/set-categories', async (req, res) => {
       });
   }
 });
+
+function getRestaurantDetails(jsonDetails, restaurants, url, done) {
+  let params = {
+    headers: {
+      'Authorization': 'Bearer ' + dispatcher.getApiKey(),
+      'content-type': 'application/json'
+    },
+    method: 'get'
+  }
+
+  // Get business reviews
+  url = url + '/reviews';
+  fetch(url, params)
+    .then(data => data.json())
+    .then(reviewJson => {
+      let restaurant = {};
+      restaurant['name'] = jsonDetails['name'];
+      restaurant['id'] = jsonDetails['id'];
+      restaurant['rating'] = jsonDetails['rating'];
+      restaurant['review_count'] = jsonDetails['review_count'];
+      restaurant['price'] = jsonDetails['price'];
+      let coordinates = jsonDetails['coordinates'];
+      restaurant['latitude'] = coordinates['latitude'];
+      restaurant['longitude'] = coordinates['longitude'];
+      restaurant['photos'] = jsonDetails['photos'];
+      restaurant['reviews'] = [];
+      restaurants.push(restaurant);
+      getReview(reviewJson, restaurant);
+      done();
+    });
+}
+
+function getReview(json, restaurant) {
+  json['reviews'].forEach((review) => {
+    let r = {};
+    r['rating'] = review['rating'];
+    r['time'] = review['time_created'];
+    r['text'] = review['text'];
+    restaurant['reviews'].push(r);
+  });
+}
 
 router.get('/restaurants', async (req, res) => {
   let accessCode = req.query['accessCode'];
@@ -308,47 +349,5 @@ router.put('/submit-swipes', async (req, res) => {
     pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
   }
 });
-
-function getRestaurantDetails(json, restaurants, url, done) {
-  let restaurant = {};
-  restaurant['name'] = json['name'];
-  restaurant['id'] = json['id'];
-  restaurant['rating'] = json['rating'];
-  restaurant['review_count'] = json['review_count'];
-  restaurant['price'] = json['price'];
-  let coordinates = json['coordinates'];
-  restaurant['latitude'] = coordinates['latitude'];
-  restaurant['longitude'] = coordinates['longitude'];
-  restaurant['photos'] = json['photos'];
-  restaurant['reviews'] = [];
-
-  let params = {
-    headers: {
-      'Authorization': 'Bearer ' + dispatcher.getApiKey(),
-      'content-type': 'application/json'
-    },
-    method: 'get'
-  }
-
-  // Get business reviews
-  url = url + '/reviews';
-  fetch(url, params)
-    .then(data2 => data2.json())
-    .then(json2 => {
-      getReview(json2, restaurant, restaurants);
-      done();
-    });
-}
-
-function getReview(json, restaurant, restaurants) {
-  json['reviews'].forEach((review) => {
-    let r = {};
-    r['rating'] = review['rating'];
-    r['time'] = review['time_created'];
-    r['text'] = review['text'];
-    restaurant['reviews'].push(r);
-  });
-  restaurants.push(restaurant);
-}
 
 module.exports = router;
