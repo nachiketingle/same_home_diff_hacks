@@ -158,7 +158,7 @@ router.put('/join-group', async (req, res) => {
       mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
       // Send pusher triggerEvent
       pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
-      res.sendStatus(200);
+      res.status(200);
     }
     else {
       res.status(409).json({'error':'Name already exists!'});
