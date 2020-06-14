@@ -23,7 +23,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Widget searchIcon = Icon(Icons.search);
 
   void _submitCategories() {
-    CategoryService.setCategories(_user.accessCode, _user.name, _selectedCategories.keys).then((value) {
+    CategoryService.setCategories(_user.accessCode, _user.name, _selectedCategories.keys.toList()).then((value) {
       List<String> remaining = List();
       for(String name in value) {
         remaining.add(name);
@@ -119,7 +119,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   shrinkWrap: true,
                   itemCount: _displayCategories.length,
                   itemBuilder: (context, index) {
-                    String cat = _displayCategories.keys.elementAt(index);
+                    String key = _displayCategories.keys.elementAt(index);
+                    String cat = _displayCategories[key];
                     return ListTileTheme(
                       selectedColor: Colors.purple,
                       child: ListTile(
