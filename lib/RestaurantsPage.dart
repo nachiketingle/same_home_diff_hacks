@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Models/Restaurant.dart';
 import 'package:samehomediffhacks/Services/RestaurantServices.dart';
@@ -103,7 +105,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
     if(!_loaded) {
       _loaded = true;
       FromWaiting wrapper = ModalRoute.of(context).settings.arguments;
-      List<dynamic> json = wrapper.message;
+      List<dynamic> json = jsonDecode(wrapper.message);
       _addRestaurants(json);
       _user = wrapper.user;
     }

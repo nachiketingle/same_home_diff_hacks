@@ -46,6 +46,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
         });
       }
       else if(json['event'] == _futureEvent) {
+        print(_futureEvent + " was invoked");
         FromWaiting wrapper = FromWaiting(_user, json['message']);
         Navigator.pushNamedAndRemoveUntil(context, _nextRoute, (_) => false, arguments: wrapper);
       }
@@ -63,6 +64,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
       _remaining = wrapper.remaining;
       pusher.firePusher(_user.accessCode, _eventName).then((value) {
         pusher.bindEvent(_futureEvent);
+        print("Events Binded in Waiting: " + _eventName + " " + _futureEvent);
       });
       listenStream();
     }
