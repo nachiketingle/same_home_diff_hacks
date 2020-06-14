@@ -63,6 +63,7 @@ router.get('/mongo', (req, res) => {
 
 router.delete('/mongo', (req, res) => {
   mongo.clearCollection('group');
+  res.send(200);
 })
 
 router.get('/get-restaurants', (req, res) => {
