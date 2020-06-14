@@ -69,53 +69,6 @@ router.delete('/mongo', (req, res) => {
   res.send(200);
 })
 
-router.get('/get-restaurants', (req, res) => {
-  let list = [{
-    'name': 'In-N-Out',
-    'id': 'WavvLdfdP6g8aZTtbBQHTw',
-    'rating': 4.5,
-    'review_count': 5296,
-    'price': '$',
-    'latitude': 37.7670169511878,
-    'longitude': -122.42184275,
-    'photos': [
-      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
-    ]
-  },
-  {
-    'name': 'mcdonalds',
-    'id': 'WavvLdfdP6g8aZTtbBQHTw',
-    'rating': 1.2,
-    'review_count': 5453356,
-    'price': '$',
-    'latitude': 31.7670169511878,
-    'longitude': -121.42184275,
-    'photos': [
-      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
-    ]
-  },
-  {
-    'name': 'icecream',
-    'id': 'WavvLdfdP6g8aZTtbBQHTw',
-    'rating': 5.3,
-    'review_count': 556,
-    'price': '$',
-    'latitude': 31.7670169511878,
-    'longitude': -121.42184275,
-    'photos': [
-      'https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg',
-      'https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg'
-    ]
-  }
-  ];
-  res.json(list);
-})
-
 // Create a group
 router.put('/create-group', async (req, res) => {
   // Generate an access code
@@ -280,6 +233,7 @@ router.put('/set-categories', async (req, res) => {
                   // update restaurants
                   mongo.addDocument(restaurantDoc, 'restaurants');
                   // finds group
+                  await new Promise(r => setTimeout(r, 1000));
                   pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
                 }
               });
@@ -346,6 +300,7 @@ router.put('/submit-swipes', async (req, res) => {
     // GET top 3 Restaurants
     let topRestaurants = keys.slice(0, 3);
     console.log(topRestaurants);
+    await new Promise(r => setTimeout(r, 1000));
     pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
   }
 });
