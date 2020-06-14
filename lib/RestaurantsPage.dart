@@ -105,9 +105,15 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
     if(!_loaded) {
       _loaded = true;
       FromWaiting wrapper = ModalRoute.of(context).settings.arguments;
-      List<dynamic> json = jsonDecode(wrapper.message);
-      _addRestaurants(json);
       _user = wrapper.user;
+      //List<dynamic> json = jsonDecode(wrapper.message);
+      RestaurantServices.getRestaurants(_user.accessCode).then((value) {
+        setState(() {
+          _restaurants = value;
+        });
+      });
+      //_addRestaurants(json);
+
     }
 
     if(_loaded) {
