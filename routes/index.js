@@ -190,6 +190,8 @@ router.put('/set-categories', async (req, res) => {
 
   // if all done, notify onSwipeStart
   if (remaining.size == 0) {
+    // wait for client screen transition
+    await new Promise(r => setTimeout(r, 1000));
     // Sending Yelp API request on /businesses/search endpoint
     const meters = Math.min(Math.floor(doc['maxDistance'] * METERS_PER_MILE), 4000);
     let params = {
@@ -233,7 +235,6 @@ router.put('/set-categories', async (req, res) => {
                   // update restaurants
                   mongo.addDocument(restaurantDoc, 'restaurants');
                   // finds group
-                  await new Promise(r => setTimeout(r, 1000));
                   pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
                 }
               });
@@ -292,6 +293,8 @@ router.put('/submit-swipes', async (req, res) => {
   // if all done, notify onResultFound
   console.log(remaining.size);
   if (remaining.size == 0) {
+    // wait client screen transition
+    await new Promise(r => setTimeout(r, 1000));
     // Sort the lists by value
     let keys = Object.keys(doc['restaurant-pool']);
     keys.sort((a, b) => {
@@ -300,7 +303,6 @@ router.put('/submit-swipes', async (req, res) => {
     // GET top 3 Restaurants
     let topRestaurants = keys.slice(0, 3);
     console.log(topRestaurants);
-    await new Promise(r => setTimeout(r, 1000));
     pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
   }
 });
