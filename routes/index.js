@@ -166,7 +166,7 @@ router.put('/set-categories', async (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
   let name = req.body['name'];
-  let categories = req.body['categories'];
+  let categories = JSON.parse(req.body['categories']);
   let restaurants = [];
 
   // finds group
