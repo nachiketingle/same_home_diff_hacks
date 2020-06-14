@@ -237,7 +237,7 @@ router.put('/set-categories', async (req, res) => {
                   // update restaurants
                   mongo.addDocument(restaurantDoc, 'restaurants');
                   // finds group
-                  pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
+                  pusher.triggerEvent(accessCode, 'onSwipeStart', "HEHEXD");
                 }
               });
             });
