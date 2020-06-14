@@ -73,6 +73,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
       body: Center(
         child: Expanded(
           child: ListView.builder(
+            itemCount: _remaining.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(_remaining[index]),
