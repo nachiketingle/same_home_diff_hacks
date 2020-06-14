@@ -166,7 +166,7 @@ router.put('/join-group', async (req, res) => {
       mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
       // Send pusher triggerEvent
       pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
-      res.status(200).json({'message':'Success', 'groupName':doc['groupName']});
+      res.status(200).json({'message':'Success', 'groupName':doc['groupName'], 'members':doc['members']});
     }
     else {
       res.status(409).json({'error':'Name already exists!'});
@@ -195,7 +195,6 @@ router.put('/set-categories', async (req, res) => {
   let categories = req.body['categories'];
   let restaurants = [];
 
-
   // finds group
   let doc = await mongo.findDocument(accessCode, 'group');
   // join categories and group categories
@@ -213,6 +212,8 @@ router.put('/set-categories', async (req, res) => {
   let remaining = new Set(doc['members']);
   doc['category-finishers'].forEach(name => remaining.delete(name));
   pusher.triggerEvent(accessCode, 'onCategoryEnd', [...remaining]);
+  res.status(200).json([...remaining]);
+
   // if all done, notify onSwipeStart
   if (remaining.size == 0) {
     // Sending Yelp API request on /businesses/search endpoint
@@ -272,7 +273,6 @@ router.put('/set-categories', async (req, res) => {
     console.log(restaurants);
     pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
   }
-  res.status(200).json(restaurants);
 });
 
 // User finishes swiping
