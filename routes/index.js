@@ -237,7 +237,7 @@ router.put('/set-categories', async (req, res) => {
                   // update restaurants
                   await mongo.addDocument(restaurantDoc, 'restaurants');
                   // finds group
-                  pusher.triggerEvent(accessCode, 'onSwipeStart', "HEHEXD");
+                  pusher.triggerEvent(accessCode, 'onSwipeStart', "You can start swiping!");
                 }
               });
             });
@@ -265,8 +265,8 @@ router.get('/restaurants', async (req, res) => {
 router.put('/submit-swipes', async (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
-  let name = req.body['name']
-  let swipes = req.body['swipes'];
+  let name = req.body['name'];
+  let swipes = JSON.parse(req.body['swipes']);
 
   // finds group
   const doc = await mongo.findDocument(accessCode, 'group');
