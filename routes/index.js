@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var mongo = require('../lib/mongo');
+const fetch = require('node-fetch');
 const pusher = require('../lib/pusher');
 const { v4: uuidv4 } = require('uuid');
+const YELP_BUSINESSES_URL = 'https://api.yelp.com/v3/businesses/';
 const ACCESS_LENGTH_CODE = 4;
+const METERS_PER_MILE = 1609.34;
 const CATEGORIES = {
   'tradamerican': 'American',
   'asianfusion': 'Asian Fushion',
@@ -117,7 +120,7 @@ router.put('/create-group', async (req, res) => {
     'longitude': longitude,
     'members': [name],
     'categories': [],
-    'restuarant-pool': {},
+    'restaurant-pool': {},
     'category-finishers': [],
     'swipe-finishers': []
   };
@@ -158,7 +161,7 @@ router.put('/join-group', async (req, res) => {
       mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
       // Send pusher triggerEvent
       pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
-      res.status(200);
+      res.status(200).json({'message':'Success', 'groupName':doc['groupName']});
     }
     else {
       res.status(409).json({'error':'Name already exists!'});
@@ -185,10 +188,11 @@ router.put('/set-categories', async (req, res) => {
   let accessCode = req.body['accessCode'];
   let name = req.body['name'];
   let categories = req.body['categories'];
+  let restaurants = [];
+
 
   // finds group
   let doc = await mongo.findDocument(accessCode, 'group');
-
   // join categories and group categories
   doc['categories'] = [...doc['categories'], ...categories]
   // remove duplicates
@@ -206,11 +210,64 @@ router.put('/set-categories', async (req, res) => {
   pusher.triggerEvent(accessCode, 'onCategoryEnd', [...remaining]);
   // if all done, notify onSwipeStart
   if (remaining.size == 0) {
-    // TODO: GET THE RESTAURANTS FROM YELP
-    let restaurants = [];
+    // Sending Yelp API request on /businesses/search endpoint
+    const meters = Math.min(Math.floor(doc['maxDistance'] * METERS_PER_MILE), 4000);
+    let params = {
+      headers:{'Authorization': 'Bearer ' + process.env.YELP_API_DETAIL, 'content-type':'application/json'},
+      method:  'get'
+    }
+    let url = YELP_BUSINESSES_URL + 'search?latitude=' + doc['latitude'] + '&longitude=' + doc['longitude'] + '&radius=' + meters + '&categories=' + doc['categories'].toString();
+    console.log(url);
+    let data = await fetch(url, params);
+    let json = await data.json();
+    let ids = [];
+    // append all business ids to ids array
+    json['businesses'].forEach(element => ids.push(element['id']));
+    console.log(ids);
+
+    // Get business details for yelp
+    for(let i = 0; i < ids.length; i++) {
+      // Get businesses detials (except reviews)
+      let id = ids[i];
+      url = YELP_BUSINESSES_URL + id;
+      data = await fetch(url, params);
+      json = await data.json();
+      console.log(json);
+
+      let restaurant = {};
+      restaurant['name'] = json['name'];
+      restaurant['id'] = json['id'];
+      restaurant['rating'] = json['rating'];
+      restaurant['review_count'] = json['review_count'];
+      restaurant['price'] = json['price'];
+      let coordinates = json['coordinates'];
+      restaurant['latitude'] = coordinates['latitude'];
+      restaurant['longitude'] = coordinates['longitude'];
+      restaurant['photos'] = json['photos'];
+      restaurant['reviews'] = [];
+
+      // Get business reviews
+      url = url + '/reviews';
+      params = {
+        headers:{'Authorization': 'Bearer ' + process.env.YELP_API_REVIEW, 'content-type':'application/json'},
+        method:  'get'
+      }
+      data = await fetch(url, params);
+      json = await data.json();
+      json['reviews'].forEach((review) => {
+        let r = {};
+        r['rating'] = review['rating'];
+        r['time'] = review['time_created'];
+        r['text'] = review['text'];
+        restaurant['reviews'].push(r);
+      });
+
+      restaurants.push(restaurant);
+    }
+    console.log(restaurants);
     pusher.triggerEvent(accessCode, 'onSwipeStart', restaurants);
   }
-  res.sendStatus(200);
+  res.status(200).json(restaurants);
 });
 
 // User finishes swiping
@@ -225,11 +282,11 @@ router.put('/submit-swipes', async (req, res) => {
 
   // count each vote in restaurant-pool
   swipes.forEach(swipe => {
-    if (doc['restuarant-pool'].hasOwnProperty(swipe)) {
-      doc['restuarant-pool'] += 1;
+    if (doc['restaurant-pool'].hasOwnProperty(swipe)) {
+      doc['restaurant-pool'][swipe] += 1;
     }
     else {
-      doc['restuarant-pool'] = 1;
+      doc['restaurant-pool'][swipe] = 1;
     }
   })
   // add name to finished list
@@ -244,9 +301,16 @@ router.put('/submit-swipes', async (req, res) => {
   doc['swipe-finishers'].forEach(name => remaining.delete(name));
   pusher.triggerEvent(accessCode, 'onSwipeEnd', [...remaining]);
   // if all done, notify onResultFound
+  console.log(remaining.size);
   if (remaining.size == 0) {
-    // TODO: GET TOP 3 Restaurants
-    let topRestaurants = [];
+    // Sort the lists by value
+    let keys = Object.keys(doc['restaurant-pool']);
+    keys.sort((a, b) => {
+      return doc['restaurant-pool'][b] - doc['restaurant-pool'][a];
+    })
+    // GET top 3 Restaurants
+    let topRestaurants = keys.slice(0, 3);
+    console.log(topRestaurants);
     pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
   }
   res.sendStatus(200);
