@@ -95,6 +95,7 @@ router.put('/create-group', async (req, res) => {
   let group = {
     'accessCode': accessCode,
     'groupName': groupName,
+    'joinable': true,
     'maxDistance': maxDistance,
     'latitude': latitude,
     'longitude': longitude,
@@ -135,22 +136,30 @@ router.put('/join-group', async (req, res) => {
   let doc = await mongo.findDocument(accessCode, 'group');
   // if group exists
   if (doc) {
-    // if name is valid
-    if (!doc['members'].includes(name)) {
-      // add members
-      doc['members'].push(name);
-      //  update document
-      mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
-      // Send pusher triggerEvent
-      pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
-      res.status(200).json({
-        'message': 'Success',
-        'groupName': doc['groupName'],
-        'members': doc['members']
-      });
-    } else {
+    // if group is joinable
+    if (doc['joinable']) {
+      // if name is valid
+      if (!doc['members'].includes(name)) {
+        // add members
+        doc['members'].push(name);
+        //  update document
+        mongo.updateDocument(accessCode, 'members', doc['members'], 'group');
+        // Send pusher triggerEvent
+        pusher.triggerEvent(accessCode, 'onGuestJoin', doc['members']);
+        res.status(200).json({
+          'message': 'Success',
+          'groupName': doc['groupName'],
+          'members': doc['members']
+        });
+      } else {
+        res.status(409).json({
+          'error': 'Name already exists!'
+        });
+      }
+    }
+    else {
       res.status(409).json({
-        'error': 'Name already exists!'
+        'error': 'Group has already started voting!'
       });
     }
   }
@@ -166,6 +175,8 @@ router.put('/join-group', async (req, res) => {
 router.put('/start-category', (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
+  // Set joinable status to false
+  mongo.updateDocument(accessCode, 'joinable', false, 'group');
   // Broadcast categories to channel
   pusher.triggerEvent(accessCode, 'onCategoryStart', CATEGORIES);
   res.json(CATEGORIES);
@@ -230,7 +241,7 @@ router.put('/set-categories', async (req, res) => {
               'content-type': 'application/json'
             },
             method: 'get'
-          } 
+          }
           // Get businesses detials (except reviews)
           url = YELP_BUSINESSES_URL + id;
           fetch(url, params)
@@ -357,8 +368,11 @@ router.put('/submit-swipes', async (req, res) => {
     let topRestaurants = keys.slice(0, 3);
     console.log(topRestaurants);
     pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
-    mongo.deleteDocument(accessCode, 'group')
-    mongo.deleteDocument(accessCode, 'restaurants')
+    // delete group after a delay
+    setTimeout(() => {
+      mongo.deleteDocument(accessCode, 'group')
+      mongo.deleteDocument(accessCode, 'restaurants')
+    }, 10000)
   }
 });
 
