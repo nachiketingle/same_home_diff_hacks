@@ -25,7 +25,12 @@ const CATEGORIES = {
   'japanese': 'Japanese',
   'thai': 'Thai',
   'vegetarian': 'Vegetarian',
-  'vietnamese': 'Vietnamese'
+  'vietnamese': 'Vietnamese',
+  'bubbletea': 'Boba',
+  'coffee': 'Coffee & Tea',
+  'donuts': 'Donuts',
+  'icecream': 'Ice Cream & Frozen Yogurt',
+  'poke': 'Poke'
 };
 
 router.get('/', (req, res) => {
