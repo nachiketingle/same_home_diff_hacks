@@ -357,6 +357,8 @@ router.put('/submit-swipes', async (req, res) => {
     let topRestaurants = keys.slice(0, 3);
     console.log(topRestaurants);
     pusher.triggerEvent(accessCode, 'onResultFound', topRestaurants);
+    mongo.deleteDocument(accessCode, 'group')
+    mongo.deleteDocument(accessCode, 'restaurants')
   }
 });
 
