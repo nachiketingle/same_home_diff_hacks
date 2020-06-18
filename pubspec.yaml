@@ -28,6 +28,7 @@ dependencies:
   location_permissions: ^2.0.3
   flutter_pusher: 1.0.2
   flutter_breadcrumb: ^0.1.2
+  keyboard_visibility: any
 
 dev_dependencies:
   flutter_test:

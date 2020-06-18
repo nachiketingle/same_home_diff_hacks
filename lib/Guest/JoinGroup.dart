@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Models/User.dart';
 import 'package:samehomediffhacks/Services/GroupServices.dart';
-import 'package:flutter_breadcrumb/flutter_breadcrumb.dart';
+import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 
 class JoinGroup extends StatefulWidget {
   _JoinGroupState createState() => _JoinGroupState();
@@ -47,51 +47,36 @@ class _JoinGroupState extends State<JoinGroup> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text("Join A Group"),
-      ),
-      body: SafeArea(
-          child: Column(
-        children: <Widget>[
-          Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                  margin: EdgeInsets.only(left: 20.0, top: 20.0),
-                  child: BreadCrumb(
-                    items: <BreadCrumbItem>[
-                      BreadCrumbItem(content: Text('Home')),
-                      BreadCrumbItem(content: Text('Join'))
-                    ],
-                    divider: Icon(Icons.chevron_right),
-                  ))),
-          Image.asset('assets/join.png', scale: 3),
-          Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.75,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  TextField(
-                    controller: _accessCodeController,
-                    decoration: InputDecoration(hintText: "Access Code"),
-                  ),
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(hintText: "Name"),
-                  ),
-                ],
-              ),
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.75,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            TextField(
+              controller: _accessCodeController,
+              decoration: InputDecoration(hintText: "Access Code"),
             ),
-          )
-        ],
-      )),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          submitCode();
-        },
-        label: Text("Join"),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(hintText: "Name"),
+            ),
+            ButtonTheme(
+              buttonColor: AppThemes.highlightColor,
+              minWidth: MediaQuery.of(context).size.width * 0.65,
+              height: MediaQuery.of(context).size.height * 0.1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
+              child: RaisedButton(
+                child: Text(
+                  "Join!",
+                  style: TextStyle(color: AppThemes.buttonTextColor),
+                ),
+                onPressed: submitCode,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
