@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:samehomediffhacks/CustomWidgets/BackgroundWidgets.dart';
+import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 import 'package:samehomediffhacks/Models/User.dart';
 import 'package:samehomediffhacks/Services/GroupServices.dart';
 
@@ -21,7 +23,7 @@ class _JoinGroupState extends State<JoinGroup> {
     _pinging = true;
     String code = _accessCodeController.text;
     String name = _nameController.text.trim();
-    
+
     GroupServices.joinGroup(code, name).then((value) {
       _pinging = false;
       if(value.containsKey('error')) {
@@ -52,35 +54,38 @@ class _JoinGroupState extends State<JoinGroup> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text("Join Group Page"),
-      ),
-
-      body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.75,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              TextField(
-                controller: _accessCodeController,
-                decoration: InputDecoration(
-                    hintText: "Access Code"
+      body: FoodGradient(
+        back: true,
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                TextField(
+                  style: AppThemes.basicTextStyle(),
+                  controller: _accessCodeController,
+                  decoration: InputDecoration(
+                      hintText: "Access Code"
+                  ),
                 ),
-              ),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                    hintText: "Name"
+                TextField(
+                  style: AppThemes.basicTextStyle(),
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                      hintText: "Name"
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(onPressed: () {
-        submitCode();
-      },
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: AppThemes.buttonColor,
+        onPressed: () {
+          submitCode();
+        },
         label: Text("Join"),
       ),
     );
