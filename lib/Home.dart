@@ -5,8 +5,38 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation<Offset> offset;
+  bool _formOpen = false;
+
+  void _toggle() {
+    setState(() {
+      _formOpen = true;
+      switch (controller.status) {
+        case AnimationStatus.completed:
+          controller.reverse();
+          break;
+        case AnimationStatus.dismissed:
+          controller.forward();
+          break;
+        default:
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
+    offset = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, 1.0))
+        .animate(controller);
+  }
+
   Widget build(BuildContext context) {
+    print(offset);
     return Scaffold(
         body: SafeArea(
       child: Stack(children: <Widget>[
@@ -46,6 +76,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.deepPurple[50]),
               )
             ]),
+            // if (!_formOpen)
             Column(
               children: <Widget>[
                 ButtonTheme(
@@ -57,10 +88,12 @@ class _HomePageState extends State<HomePage> {
                   child: RaisedButton(
                     child: Text(
                       "Create Group",
-                      style: TextStyle(color: AppThemes.buttonTextColor, fontSize: 18),
+                      style: TextStyle(
+                          color: AppThemes.buttonTextColor, fontSize: 18),
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, "/settings");
+                      _toggle();
+                      // Navigator.pushNamed(context, "/settings");
                     },
                   ),
                 ),
@@ -74,15 +107,26 @@ class _HomePageState extends State<HomePage> {
                   child: RaisedButton(
                     child: Text(
                       "Join Group",
-                      style: TextStyle(color: AppThemes.buttonTextColor, fontSize: 18),
+                      style: TextStyle(
+                          color: AppThemes.buttonTextColor, fontSize: 18),
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, "/joinGroup");
+                      // Navigator.pushNamed(context, "/joinGroup");
                     },
                   ),
                 )
               ],
-            )
+            ),
+            if (_formOpen)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SlideTransition(
+                    position: offset,
+                    child: Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: CircularProgressIndicator(),
+                    )),
+              )
           ],
         ))
       ]),
