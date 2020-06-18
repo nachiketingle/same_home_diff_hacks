@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: AppThemes.primaryColor,
+        fontFamily: "Montserrat"
       ),
       routes: {
         "/": (context) => HomePage(),
