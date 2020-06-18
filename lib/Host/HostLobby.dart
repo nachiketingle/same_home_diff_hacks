@@ -77,25 +77,36 @@ class _HostLobbyState extends State<HostLobby> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Group: " + user.groupName),
-      ),
       body: FoodGradient(
+        back: true,
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text("Access Code: " + user.accessCode.toString()),
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: Text(
+                  "Access Code: " + user.accessCode.toString(),
+                  style: AppThemes.basicTextStyle(),),
+              ),
               ListView.builder(
                   itemCount: _allUsers.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(_allUsers[index]),
+                      title: Text(
+                        _allUsers[index],
+                        style: AppThemes.basicTextStyle(),),
                     );
                   }
               ),
-              Text("Number of Users: " + _allUsers.length.toString())
+              Padding(
+                padding: const EdgeInsets.only(bottom: 100),
+                child: Text(
+                  "Number of Users: " + _allUsers.length.toString(),
+                  style: AppThemes.basicTextStyle(),
+                ),
+              )
             ],
           ),
         ),
@@ -105,7 +116,7 @@ class _HostLobbyState extends State<HostLobby> {
           onPressed: startVote,
           label: Text("Start Voting", style: TextStyle(color: AppThemes.buttonTextColor),)
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

@@ -16,6 +16,7 @@ class _JoinGroupState extends State<JoinGroup> {
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
+  /// Submit code and go to next page if possible
   void submitCode() async {
     if(_isValid() && _pinging) {
       return;
@@ -44,6 +45,7 @@ class _JoinGroupState extends State<JoinGroup> {
 
   }
 
+  /// Check if all fields are valid
   bool _isValid() {
     if(_nameController.text.trim().length > 0)
       return true;

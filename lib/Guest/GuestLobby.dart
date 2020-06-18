@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:samehomediffhacks/CustomWidgets/BackgroundWidgets.dart';
+import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 import 'package:samehomediffhacks/Wrappers/LobbyToCategory.dart';
 import '../Models/User.dart';
 import '../Networking/PusherWeb.dart';
@@ -78,25 +80,40 @@ class _GuestLobbyState extends State<GuestLobby> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Group: " + user.groupName),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Access Code: " + user.accessCode.toString()),
-            ListView.builder(
-                itemCount: _allUsers.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_allUsers[index]),
-                  );
-                }
-            ),
-            Text("Number of Users: " + _allUsers.length.toString())
-          ],
+      body: FoodGradient(
+        back: true,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: Text(
+                  "Access Code: " + user.accessCode.toString(),
+                  style: AppThemes.basicTextStyle(),
+                ),
+              ),
+              ListView.builder(
+                  itemCount: _allUsers.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        _allUsers[index],
+                        style: AppThemes.basicTextStyle(),
+                      ),
+                    );
+                  }
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 100),
+                child: Text(
+                  "Number of Users: " + _allUsers.length.toString(),
+                  style: AppThemes.basicTextStyle(),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

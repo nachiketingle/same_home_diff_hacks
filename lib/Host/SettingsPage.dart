@@ -19,14 +19,15 @@ class _SettingsPageState extends State<SettingsPage> {
   double lng;
   bool _pinging = false;
 
+  /// Ping server for access code
+  /// If successful, go to next page
   void getAccessCode() async {
-    if (!validFields())
-      return;
-    if(_pinging)
+    if (!_validFields() || _pinging)
       return;
 
     _pinging = true;
-    // TODO: Ping server for access code
+
+    // Ping server for access code
     await DeviceInfo.getLocationData().then((value) {
       double lat = value.latitude;
       double lng = value.longitude;
@@ -46,17 +47,18 @@ class _SettingsPageState extends State<SettingsPage> {
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text("TIMEOUT: Unable to retrieve code"),
         ));
-      });/*.catchError((err) {
+      }).catchError((err) {
         // If not, indicate it with snack bar
         _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text("ERROR: " + err.toString()),
         ));
-      });*/
+      });
     });
     _pinging = false;
   }
 
-  bool validFields() {
+  /// Check if all fields are valid
+  bool _validFields() {
     if(_nameController.text.trim().length > 0 && _groupNameController.text.trim().length > 0) {
       return true;
     }

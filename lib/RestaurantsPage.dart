@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:samehomediffhacks/Models/Restaurant.dart';
 import 'package:samehomediffhacks/Services/RestaurantServices.dart';
@@ -19,6 +17,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
   bool _loaded = false;
   User _user;
 
+  /// Submit chosen swipes to server and go to the waiting room
   void _submitRestaurants() {
     List<String> _ids = List();
     for(Restaurant rest in _rightList) {
@@ -36,20 +35,12 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
 
   }
 
+  /// Go to next page depicting more information of chosen restaurant
   void _showMoreInfo(Restaurant restaurant) {
     Navigator.pushNamed(context, "/restaurantInfo", arguments: restaurant);
   }
 
-  void _addRestaurants(List<dynamic> body) {
-    for(Map<String, dynamic> json in body) {
-      _restaurants.add(Restaurant.fromJSON(json));
-    }
-
-    setState(() {
-
-    });
-  }
-
+  /// Create and return list of [Card] depicting individual restaurants
   List<Widget> _getCards() {
     List<Widget> cards = List();
 
@@ -58,6 +49,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
         Dismissible(
           key: UniqueKey(),
           onDismissed: (dir) {
+            // Based on swipe direction, put into appropriate list
             if(dir == DismissDirection.startToEnd) {
               rest.votedFor = true;
               _rightList.add(rest);
@@ -69,7 +61,6 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
             setState(() {
               _restaurants.remove(rest);
             });
-
           },
           child: Center(
             child: GestureDetector(
@@ -112,18 +103,13 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
 
       FromWaiting wrapper = ModalRoute.of(context).settings.arguments;
       _user = wrapper.user;
-      //List<dynamic> json = jsonDecode(wrapper.message);
       RestaurantServices.getRestaurants(_user.accessCode).then((value) {
         setState(() {
           _restaurants = value;
           _loaded = true;
         });
       });
-      //_addRestaurants(json);
-
     }
-
-
 
     return Scaffold(
       appBar: AppBar(
