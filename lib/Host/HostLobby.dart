@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:samehomediffhacks/CustomWidgets/BackgroundWidgets.dart';
 import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 import 'package:samehomediffhacks/Services/CategoryService.dart';
 import 'package:samehomediffhacks/Wrappers/LobbyToCategory.dart';
@@ -74,32 +75,33 @@ class _HostLobbyState extends State<HostLobby> {
       listenStream();
       _allUsers.add(user.name);
     }
-    print(user.toString());
-
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Group: " + user.groupName),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Access Code: " + user.accessCode.toString()),
-            ListView.builder(
-                itemCount: _allUsers.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_allUsers[index]),
-                  );
-                }
-            ),
-            Text("Number of Users: " + _allUsers.length.toString())
-          ],
+      body: FoodGradient(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("Access Code: " + user.accessCode.toString()),
+              ListView.builder(
+                  itemCount: _allUsers.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(_allUsers[index]),
+                    );
+                  }
+              ),
+              Text("Number of Users: " + _allUsers.length.toString())
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: AppThemes.buttonColor,
           onPressed: startVote,
           label: Text("Start Voting", style: TextStyle(color: AppThemes.buttonTextColor),)
       ),

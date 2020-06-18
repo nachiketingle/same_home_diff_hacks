@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:samehomediffhacks/CustomWidgets/BackgroundWidgets.dart';
 import 'package:samehomediffhacks/Helpers/AppThemes.dart';
 import '../Models/User.dart';
 import '../Services/GroupServices.dart';
@@ -72,50 +73,58 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text("Settings Page"),
-        actions: <Widget>[
-
-        ],
-      ),
-
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: TextField(
-                controller: _groupNameController,
-                decoration: InputDecoration(
-                  hintText: "Group Name"
+      body: FoodGradient(
+        back: true,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: TextField(
+                  style: AppThemes.basicTextStyle(),
+                  controller: _groupNameController,
+                  decoration: InputDecoration(
+                    hintText: "Group Name"
+                  ),
                 ),
               ),
-            ),
-            Text("Max distance: " + miles.toStringAsFixed(2) + " miles"),
-            Slider(
-              min: 1,
-              max: 25,
-              value: miles,
-              onChanged: (val) {
-                setState(() {
-                  miles = val;
-                });
-              },
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                    hintText: "Your Name"
+              Column(
+                children: <Widget>[
+                  Text(
+                    "Max distance: " + miles.toStringAsFixed(2) + " miles",
+                    style: AppThemes.basicTextStyle()
+                  ),
+                  Slider(
+                    activeColor: AppThemes.secondaryColor,
+                    inactiveColor: AppThemes.primaryColor,
+                    min: 1,
+                    max: 25,
+                    value: miles,
+                    onChanged: (val) {
+                      setState(() {
+                        miles = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: TextField(
+                  style: AppThemes.basicTextStyle(),
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                      hintText: "Your Name"
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: AppThemes.buttonColor,
         label: Text("Create Group", style: TextStyle(color: AppThemes.buttonTextColor),),
         onPressed: getAccessCode,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
