@@ -53,6 +53,12 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
@@ -152,7 +158,7 @@ class _HomePageState extends State<HomePage>
                               _toggle();
                             }
                           },
-                          child: Group(index:index))))
+                          child: Group(index: index))))
           ],
         ))
       ]),

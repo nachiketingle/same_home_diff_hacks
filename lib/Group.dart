@@ -67,6 +67,9 @@ class _Group extends State<Group> with SingleTickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(50),
                           color: Colors.deepPurpleAccent[100]),
                     )),
+                    Divider(
+                      color: Colors.white,
+                    ),
                     Expanded(
                         child: TabBarView(
                       controller: _tabController,
