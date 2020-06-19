@@ -171,6 +171,14 @@ router.put('/join-group', async (req, res) => {
   }
 });
 
+router.put('/poke', (req, res) => {
+  // Parse body
+  let accessCode = req.body['accessCode'];
+  let from = req.body['from'];
+  let to = req.body['to'];
+  pusher.triggerEvent(accessCode, 'onPoke', { from: from, to: to });
+})
+
 // Host starts category
 router.put('/start-category', (req, res) => {
   // Parse body
