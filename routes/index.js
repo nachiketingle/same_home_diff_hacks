@@ -177,6 +177,7 @@ router.put('/poke', (req, res) => {
   let from = req.body['from'];
   let to = req.body['to'];
   pusher.triggerEvent(accessCode, 'onPoke', { from: from, to: to });
+  res.sendStatus(200);
 })
 
 // Host starts category
