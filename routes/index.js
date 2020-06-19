@@ -174,7 +174,9 @@ router.put('/join-group', async (req, res) => {
 router.put('/poke', (req, res) => {
   // Parse body
   let accessCode = req.body['accessCode'];
-  pusher.triggerEvent(accessCode, 'onPoke', req.body);
+  let body = Object.assign({}, req.body);
+  console.log(body);
+  pusher.triggerEvent(accessCode, 'onPoke', body);
   res.status(200).json({ "status": "ok" });
 })
 
