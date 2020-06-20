@@ -213,7 +213,7 @@ router.put('/start-category', (req, res) => {
   res.json(CATEGORIES);
 });
 
-router.put('category-emoji', (req, res) => {
+router.get('category-emoji', (req, res) => {
   let r = {};
   Object.keys(CATEGORIES).forEach((key) => { r[key] = CATEGORY_EMOJIS.hasOwnProperty(key) ? CATEGORY_EMOJIS[key] : DEFAULT_EMOJI });
   res.json(r);
