@@ -43,7 +43,7 @@ const CATEGORY_EMOJIS = {
   'burgers': '🍔',
   'cafes': '🍪',
   'chicken_wings': '🍗',
-  'chinese': '🥢',
+  'chinese': '🥟',
   'comfortfood': '🍕',
   'korean': '🍲',
   'japanese': '🍙',
