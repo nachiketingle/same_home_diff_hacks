@@ -35,13 +35,15 @@ const CATEGORIES = {
 
 const DEFAULT_EMOJI = "🍽";
 const CATEGORY_EMOJIS = {
+  'tradamerican': '🍟',
   'asianfusion': '🍱',
   'bbq': '🍖',
   'breakfast_brunch': '🥞',
+  'buffets': '🥩',
   'burgers': '🍔',
   'cafes': '🍪',
   'chicken_wings': '🍗',
-  'chinese': '🥡',
+  'chinese': '🥠',
   'comfortfood': '🍕',
   'korean': '🍲',
   'japanese': '🍙',
