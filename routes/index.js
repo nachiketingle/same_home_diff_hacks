@@ -12,7 +12,7 @@ const ACCESS_LENGTH_CODE = 4;
 const METERS_PER_MILE = 1609.34;
 const CATEGORIES = {
   'tradamerican': 'American',
-  'asianfusion': 'Asian Fushion',
+  'asianfusion': 'Asian Fusion',
   'bbq': 'Barbeque',
   'breakfast_brunch': 'Breakfast & Brunch',
   'buffets': 'Buffets',
@@ -32,6 +32,28 @@ const CATEGORIES = {
   'icecream': 'Ice Cream & Frozen Yogurt',
   'poke': 'Poke'
 };
+
+const DEFAULT_EMOJI = "🍽";
+const CATEGORY_EMOJIS = {
+  'asianfusion': '🍱',
+  'bbq': '🍖',
+  'breakfast_brunch': '🥞',
+  'burgers': '🍔',
+  'cafes': '🍪',
+  'chicken_wings': '🍗',
+  'chinese': '🥡',
+  'comfortfood': '🍕',
+  'korean': '🍲',
+  'japanese': '🍙',
+  'thai': '🍚',
+  'vegetarian': '🥕',
+  'vietnamese': '🍜',
+  'bubbletea': '🥛',
+  'coffee': '☕',
+  'donuts': '🍩',
+  'icecream': '🍦',
+  'poke': '🍣'
+}
 
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public', 'index.html'));
@@ -190,6 +212,12 @@ router.put('/start-category', (req, res) => {
   pusher.triggerEvent(accessCode, 'onCategoryStart', CATEGORIES);
   res.json(CATEGORIES);
 });
+
+router.put('category-emoji', (req, res) => {
+  let r = {};
+  Object.keys(CATEGORIES).forEach((key) => { r[key] = CATEGORY_EMOJIS.hasOwnProperty(key) ? CATEGORY_EMOJIS[key] : DEFAULT_EMOJI });
+  res.json(r);
+})
 
 // User finishes entering categories
 router.put('/set-categories', async (req, res) => {
