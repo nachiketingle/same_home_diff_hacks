@@ -33,17 +33,17 @@ const CATEGORIES = {
   'poke': 'Poke'
 };
 
-const DEFAULT_EMOJI = "🍽";
+const DEFAULT_EMOJI = "🍳";
 const CATEGORY_EMOJIS = {
   'tradamerican': '🍟',
   'asianfusion': '🍱',
   'bbq': '🍖',
   'breakfast_brunch': '🥞',
-  'buffets': '🥩',
+  'buffets': '🍳',
   'burgers': '🍔',
   'cafes': '🍪',
   'chicken_wings': '🍗',
-  'chinese': '🥠',
+  'chinese': '🥢',
   'comfortfood': '🍕',
   'korean': '🍲',
   'japanese': '🍙',
