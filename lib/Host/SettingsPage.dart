@@ -114,9 +114,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     ))
               ],
             ),
-            Bulge(onPressed: () {
-              getAccessCode(context);
-            })
+            Bulge(
+                onPressed: () async {
+                  getAccessCode(context);
+                },
+                icon: Icon(Icons.add_circle_outline),
+                iconSize: 65)
           ],
         )),
       );

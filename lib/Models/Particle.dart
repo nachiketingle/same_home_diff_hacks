@@ -29,7 +29,7 @@ class Particle {
     final endPosition = Offset(-0.2 + 1.4 * random.nextDouble(), -0.2);
     // shorter duration => faster
     duration = 2000 + random.nextInt(1000);
-    size = 0.2 + random.nextDouble() * 0.4;
+    size = 1 + random.nextDouble() - .5;
     tween = MultiTween<DefaultAnimationProperties>()
       ..add(
           DefaultAnimationProperties.x,

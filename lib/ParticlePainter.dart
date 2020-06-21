@@ -12,7 +12,7 @@ class ParticlePainter extends CustomPainter {
     particles.forEach((particle) {
       // create the text to renderer
       final textStyle = TextStyle(
-        fontSize: 30,
+        fontSize: 30 * particle.size
       );
       final textSpan = TextSpan(
         text: particle.text,

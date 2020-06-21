@@ -5,11 +5,18 @@ typedef void VoidCallback();
 
 class Bulge extends StatefulWidget {
   final VoidCallback onPressed;
-  Bulge({Key key, @required this.onPressed}) : super(key: key);
-  _Bulge createState() => _Bulge();
+  final Icon icon;
+  final double iconSize;
+  Bulge(
+      {Key key,
+      @required this.onPressed,
+      @required this.icon,
+      @required this.iconSize})
+      : super(key: key);
+  BulgeState createState() => BulgeState();
 }
 
-class _Bulge extends State<Bulge> with SingleTickerProviderStateMixin {
+class BulgeState extends State<Bulge> with SingleTickerProviderStateMixin {
   AnimationController animationController;
   Animation<double> animation;
   int _animationDuration = 100;
@@ -37,29 +44,35 @@ class _Bulge extends State<Bulge> with SingleTickerProviderStateMixin {
     ));
   }
 
+  Future bulge() async {
+    print("Bulge Call!");
+    // animate bulge
+    animationController.forward();
+    // wait for bulge to end
+    return Future.delayed(Duration(milliseconds: _animationDuration * 2));
+  }
+
   Widget build(BuildContext context) {
     return ScaleTransition(
         scale: animation,
         alignment: Alignment.center,
         child: IconButton(
-          iconSize: 65,
+          iconSize: widget.iconSize,
           color: AppThemes.highlightColor,
           hoverColor: AppThemes.buttonColor,
-          icon: Icon(Icons.add_circle_outline),
-          onPressed: () async {
-            // animate bulge
-            animationController.forward();
-            // wait for bulge to end
-            await Future.delayed(
-                Duration(milliseconds: _animationDuration * 2));
-            // close keyboard
-            FocusScope.of(context).requestFocus(FocusNode());
-            // settle
-            await Future.delayed(
-                Duration(milliseconds: _animationDuration * 2));
-            // call resulting function
-            widget.onPressed();
-          },
+          icon: widget.icon,
+          onPressed: widget.onPressed != null
+              ? () async {
+                  await bulge();
+                  // close keyboard
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  // settle
+                  await Future.delayed(
+                      Duration(milliseconds: _animationDuration * 2));
+                  // call resulting function
+                  widget.onPressed();
+                }
+              : null,
         ));
   }
 }

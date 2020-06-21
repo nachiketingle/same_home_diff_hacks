@@ -8,12 +8,20 @@ class CategoryService {
     print("Access Code: " + accessCode);
     Map<String, dynamic> body = Map();
     body['accessCode'] = accessCode;
-    Map<String, dynamic> list = await Network.put(Constants.startCategories, body);
+    Map<String, dynamic> list =
+        await Network.put(Constants.startCategories, body);
     print("Start Category: " + list.toString());
     return list;
   }
 
-  static Future<List<dynamic>> setCategories(String accessCode, String name, List<String> codes) async {
+  static Future<Map<String, dynamic>> getEmojis() async {
+    Map<String, dynamic> map =
+        await Network.get(Constants.getCategoryEmojis, {});
+    return map;
+  }
+
+  static Future<List<dynamic>> setCategories(
+      String accessCode, String name, List<String> codes) async {
     Map<String, dynamic> body = Map();
     body['accessCode'] = accessCode;
     body['name'] = name;
@@ -22,5 +30,4 @@ class CategoryService {
     print("Set Category: " + list.toString());
     return list;
   }
-
 }

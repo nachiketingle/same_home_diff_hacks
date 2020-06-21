@@ -15,6 +15,7 @@ class _HomePageState extends State<HomePage>
   bool _keyboardVisible = false;
   int index = 0;
   int animationTime = 500;
+  bool isPlaying = false;
 
   void _toggle() async {
     _formOpen = !_formOpen;
@@ -145,7 +146,7 @@ class _HomePageState extends State<HomePage>
                       },
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * .15),
+                  SizedBox(height: MediaQuery.of(context).size.height * .15),          
                 ],
               ),
             if (_formOpen)

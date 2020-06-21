@@ -64,6 +64,8 @@ class _JoinGroupState extends State<JoinGroup> {
               onPressed: () async {
                 submitCode(context);
               },
+              icon: Icon(Icons.add_circle_outline),
+              iconSize: 65
             )
           ],
         ),

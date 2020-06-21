@@ -9,12 +9,15 @@ import './Networking/PusherWeb.dart';
 import './Networking/Network.dart';
 import './Helpers/Constants.dart';
 import './Particles.dart';
+import './Bulge.dart';
 
 class Lobby extends StatefulWidget {
   _LobbyState createState() => _LobbyState();
 }
 
-class _LobbyState extends State<Lobby> {
+class _LobbyState extends State<Lobby> with TickerProviderStateMixin {
+  final _listKey = GlobalKey<AnimatedListState>();
+
   List<String> emojis = [
     '🍇',
     '🍈',
@@ -38,12 +41,20 @@ class _LobbyState extends State<Lobby> {
   User user;
   List<String> _allUsers = List<String>();
   List<bool> _pokable = List<bool>();
+  List<GlobalKey<BulgeState>> pokeKeys = [];
+
   bool _loaded = false;
   bool _pinging = false;
   PusherWeb pusher;
   int myIndex;
   bool _poking = false;
   String _pokingEmoji = "";
+
+  void initState() {
+    super.initState();
+    emojis.shuffle();
+    pusher = PusherWeb();
+  }
 
   // called by host only
   void startVote() async {
@@ -71,11 +82,13 @@ class _LobbyState extends State<Lobby> {
       Map<String, dynamic> json = jsonDecode(event);
       if (json['event'] == "onGuestJoin") {
         setState(() {
-          _allUsers.clear();
           List<dynamic> _temp = json['message'];
+          int startFill = _allUsers.length;
           // add every name
-          for (String name in _temp) {
-            _allUsers.add(name);
+          for (; startFill < _temp.length; startFill++) {
+            _allUsers.add(_temp[startFill]);
+            pokeKeys.add(GlobalKey<BulgeState>());
+            _listKey.currentState.insertItem(_allUsers.length - 1);
           }
           // new users are pokable
           int missing = _allUsers.length - _pokable.length;
@@ -96,15 +109,18 @@ class _LobbyState extends State<Lobby> {
         if (myIndex == to) {
           print("Getting Poked by $from ${emojis[from]}");
           setState(() {
+            // enable their poke button
             _poking = true;
             _pokingEmoji = emojis[from];
             _pokable[from] = true;
+            pokeKeys[from].currentState.bulge();
           });
         }
       }
     });
   }
 
+  // initiate a poke
   void poke(int from, int to) {
     print('$from poked $to');
     // prevent poke spam
@@ -121,6 +137,7 @@ class _LobbyState extends State<Lobby> {
     Network.put(Constants.poke, body);
   }
 
+  // hide animation when poke is finished
   void onPokeFinished() async {
     await Future.delayed(Duration(milliseconds: 100));
     setState(() {
@@ -128,10 +145,42 @@ class _LobbyState extends State<Lobby> {
     });
   }
 
-  void initState() {
-    super.initState();
-    emojis.shuffle();
-    pusher = PusherWeb();
+  // builds the list of people
+  Widget listBuilder(context, index, animation) {
+    Animation<Offset> offset;
+    offset = Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0))
+        .animate(CurvedAnimation(
+      parent: animation,
+      curve: Curves.ease,
+    ));
+    return SlideTransition(
+        position: offset,
+        child: Column(children: <Widget>[
+          ListTile(
+              leading: Text('${emojis[index % emojis.length]}',
+                  style: TextStyle(fontSize: 30)),
+              title: Text(
+                _allUsers[index],
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              subtitle: Text(index == 0 ? "Owner" : 'Guest #$index'),
+              trailing: Bulge(
+                key: pokeKeys[index],
+                onPressed: _pokable[index]
+                    ? () {
+                        poke(myIndex, index);
+                      }
+                    : null,
+                icon: Icon(
+                  Icons.tag_faces,
+                  color: _pokable[index] ? AppThemes.highlightColor : null,
+                ),
+                iconSize: 30,
+              )),
+          Divider()
+        ]));
   }
 
   void dispose() {
@@ -149,8 +198,10 @@ class _LobbyState extends State<Lobby> {
       List<User> users = ModalRoute.of(context).settings.arguments;
       // add each user
       _allUsers.clear();
-      for (User _user in users) {
+      for (int i = 0; i < users.length; i++) {
+        User _user = users[i];
         _allUsers.add(_user.name);
+        pokeKeys.add(GlobalKey<BulgeState>());
       }
       // new users are pokable
       int missing = _allUsers.length - _pokable.length;
@@ -162,7 +213,7 @@ class _LobbyState extends State<Lobby> {
       // assign unique index
       myIndex = users.length - 1;
       user = users.last;
-      print(_allUsers);
+      // setup pusher
       listenStream();
       _loaded = true;
     }
@@ -203,39 +254,11 @@ class _LobbyState extends State<Lobby> {
               ),
               Expanded(
                   child: Center(
-                child: ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return Divider();
-                    },
-                    itemCount: _allUsers.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Text('${emojis[index % emojis.length]}',
-                            style: TextStyle(fontSize: 30)),
-                        title: Text(
-                          _allUsers[index],
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                        subtitle: Text(index == 0 ? "Owner" : 'Guest #$index'),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.tag_faces,
-                            color: _pokable[index]
-                                ? AppThemes.highlightColor
-                                : null,
-                            size: 30,
-                          ),
-                          onPressed: _pokable[index]
-                              ? () {
-                                  poke(myIndex, index);
-                                }
-                              : null,
-                        ),
-                      );
-                    }),
-              )),
+                      child: AnimatedList(
+                key: _listKey,
+                initialItemCount: _allUsers.length,
+                itemBuilder: listBuilder,
+              ))),
               Divider(
                 color: Colors.black,
               ),
