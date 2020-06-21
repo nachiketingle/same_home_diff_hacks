@@ -54,19 +54,30 @@ class _JoinGroupState extends State<JoinGroup> {
           children: <Widget>[
             TextField(
               controller: _accessCodeController,
-              decoration: InputDecoration(hintText: "Access Code"),
+              decoration: new InputDecoration(
+                  isDense: true,
+                  labelText: "Access Code",
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.all(Radius.circular(10)),
+                    borderSide: new BorderSide(),
+                  )),
             ),
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(hintText: "Name"),
+              decoration: new InputDecoration(
+                  isDense: true,
+                  labelText: "Name",
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.all(Radius.circular(10)),
+                    borderSide: new BorderSide(),
+                  )),
             ),
             Bulge(
-              onPressed: () async {
-                submitCode(context);
-              },
-              icon: Icon(Icons.add_circle_outline),
-              iconSize: 65
-            )
+                onPressed: () async {
+                  submitCode(context);
+                },
+                icon: Icon(Icons.add_circle_outline),
+                iconSize: 65)
           ],
         ),
       ),

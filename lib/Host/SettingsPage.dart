@@ -84,15 +84,29 @@ class _SettingsPageState extends State<SettingsPage> {
         width: MediaQuery.of(context).size.width * 0.7,
         child: SingleChildScrollView(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             TextField(
               controller: _groupNameController,
-              decoration: InputDecoration(hintText: "Group Name"),
+              decoration: new InputDecoration(
+                  isDense: true,
+                  labelText: "Group Name",
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.all(Radius.circular(10)),
+                    borderSide: new BorderSide(),
+                  )),
             ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(hintText: "Your Name"),
+              decoration: new InputDecoration(
+                  isDense: true,
+                  labelText: "Your Name",
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.all(Radius.circular(10)),
+                    borderSide: new BorderSide(),
+                  )),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
             Column(

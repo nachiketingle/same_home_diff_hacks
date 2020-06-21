@@ -6,6 +6,7 @@ import 'package:samehomediffhacks/Wrappers/ToWaiting.dart';
 import 'Helpers/AppThemes.dart';
 import 'Models/User.dart';
 import 'package:like_button/like_button.dart';
+import 'dart:async';
 
 class CategoriesPage extends StatefulWidget {
   _CategoriesPageState createState() => _CategoriesPageState();
@@ -109,6 +110,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
       });
       _user = wrapper.user;
       _displayCategories.addAll(_allCategories.keys);
+      _displayCategories
+          .sort((a, b) => _allCategories[a].compareTo(_allCategories[b]));
       _loaded = true;
     }
 
@@ -160,6 +163,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     shrinkWrap: true,
                     itemCount: _displayCategories.length,
                     itemBuilder: (context, index) {
+                      print(index);
                       String key = _displayCategories.elementAt(index);
                       String cat = _allCategories[key];
                       Future<bool> onLikeButtonTapped(bool isLiked) async {
@@ -168,10 +172,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         } else {
                           _selectedCategories[key] = cat;
                         }
+                        new Timer(Duration(milliseconds: isLiked ? 0 : 1000),
+                            () {
+                          setState(() {});
+                        });
+
                         return !isLiked;
                       }
 
                       Widget like = LikeButton(
+                        isLiked: _selectedCategories.containsKey(key),
                         size: 30,
                         circleColor: CircleColor(
                             start: Color(0xff00ddff), end: Color(0xff0099cc)),
