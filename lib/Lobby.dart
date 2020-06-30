@@ -175,7 +175,7 @@ class _LobbyState extends State<Lobby> with TickerProviderStateMixin {
                     : null,
                 icon: Icon(
                   Icons.tag_faces,
-                  color: _pokable[index] ? AppThemes.highlightColor : null,
+                  color: _pokable[index] ? Colors.deepOrange[200] : null,
                 ),
                 iconSize: 30,
               )),
@@ -245,9 +245,20 @@ class _LobbyState extends State<Lobby> with TickerProviderStateMixin {
                     fontSize: 50,
                     color: AppThemes.primaryColor),
               ),
-              Text(
-                "Access Code: " + user.accessCode.toString(),
-                style: TextStyle(fontSize: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Access Code: ",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SelectableText(
+                    user.accessCode.toString(),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
               ),
               Divider(
                 color: Colors.black,

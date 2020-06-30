@@ -33,6 +33,7 @@ dependencies:
   page_transition: ^1.1.5
   simple_animations: ^2.2.1
   like_button: ^1.0.1
+  flutter_star_rating: ^0.0.2
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,7 @@ import 'Wrappers/FromWaiting.dart';
 import 'Wrappers/ToWaiting.dart';
 import 'Networking/PusherWeb.dart';
 import 'Models/User.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class WaitingRoom extends StatefulWidget {
   _WaitingRoomState createState() => _WaitingRoomState();
@@ -31,7 +32,7 @@ class _WaitingRoomState extends State<WaitingRoom> {
   }
 
   void listenStream() async {
-    pusher.eventStream.listen((event) {
+    pusher.eventStream.listen((event) async {
       print("Event: " + event);
       Map<String, dynamic> json = jsonDecode(event);
       if (json['event'] == _eventName) {
@@ -42,8 +43,8 @@ class _WaitingRoomState extends State<WaitingRoom> {
             _remaining.add(name);
           }
         });
-      }
-      else if(json['event'] == _futureEvent) {
+      } else if (json['event'] == _futureEvent) {
+        // await Future.delayed(Duration(milliseconds: 10000000));
         FromWaiting wrapper = FromWaiting(_user, json['message']);
         Navigator.pushNamedAndRemoveUntil(context, _nextRoute, (_) => false,
             arguments: wrapper);
@@ -68,20 +69,53 @@ class _WaitingRoomState extends State<WaitingRoom> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        leading: Container(),
-        title: Text("You are waiting for..."),
-      ),
-      body: Center(
-        child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _remaining.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(_remaining[index]),
-              );
-            }),
-      ),
+      body: SafeArea(
+          child: Center(
+              child: Stack(children: <Widget>[
+        Opacity(
+          opacity: .6,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.blue, Colors.purple]),
+            ),
+          ),
+        ),
+        Column(children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .1,
+          ),
+          Text(_remaining.length == 0 ? "Loading..." : "Waiting for...",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                  color: Colors.deepPurple[50])),
+          if (_remaining.length > 0)
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: _remaining.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: new Center(
+                        child: Text(_remaining[index],
+                            style: TextStyle(fontSize: 25))),
+                  );
+                }),
+          if (_remaining.length == 0)
+            Column(
+              children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .3,
+                ),
+                Transform.scale(
+                    scale: 4,
+                    child: SpinKitDoubleBounce(color: Colors.deepPurple))
+              ],
+            )
+        ])
+      ]))),
     );
   }
 }
