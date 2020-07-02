@@ -30,7 +30,8 @@ const CATEGORIES = {
   'coffee': 'Coffee & Tea',
   'donuts': 'Donuts',
   'icecream': 'Ice Cream & Frozen Yogurt',
-  'poke': 'Poke'
+  'poke': 'Poke',
+  'indpak': 'Indian'
 };
 
 const DEFAULT_EMOJI = "🍳";
@@ -54,7 +55,8 @@ const CATEGORY_EMOJIS = {
   'coffee': '☕',
   'donuts': '🍩',
   'icecream': '🍦',
-  'poke': '🍣'
+  'poke': '🍣',
+  'indpak': '🍛'
 }
 
 router.get('/', (req, res) => {
